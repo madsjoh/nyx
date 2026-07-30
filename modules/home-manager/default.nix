@@ -13,6 +13,18 @@ in
   ];
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
+    ({
+      home.file = lib.listToAttrs (map (bg: {
+        name = ".config/nyx/backgrounds/${cfg.theme}/${bg}";
+        value = { source = ../../../themes/${cfg.theme}/backgrounds/${bg}; };
+      }) (theme.backgrounds or []));
+
+      home.activation.nyxBackgroundSymlink = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        mkdir -p "$HOME/.local/state/nyx/current"
+        ln -sfn "$HOME/.config/nyx/backgrounds/${cfg.theme}" "$HOME/.local/state/nyx/current/background"
+      '';
+    })
+
     (lib.mkIf cfg."alacritty".enable (import ./integration/alacritty.nix integrationArgs))
     (lib.mkIf cfg."btop".enable (import ./integration/btop.nix integrationArgs))
     (lib.mkIf cfg."chromium".enable (import ./integration/chromium.nix integrationArgs))
