@@ -24,5 +24,7 @@
     color14 = "#0db9d7";
     color15 = "#acb0d0";
   };
-  overrides = {};
+  overrides = {
+    keyboard-rgb = "ff00ff\n";
+  };
 }

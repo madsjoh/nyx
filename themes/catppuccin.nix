@@ -24,5 +24,10 @@
     color14 = "#94e2d5";
     color15 = "#a6adc8";
   };
-  overrides = {};
+  overrides = {
+    waybar = ''
+      @define-color foreground #cdd6f4;
+      @define-color background #181824;
+    '';
+  };
 }

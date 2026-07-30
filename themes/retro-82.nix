@@ -24,5 +24,36 @@
     color14 = "#8cbfb8";
     color15 = "#f6dcac";
   };
-  overrides = {};
+  overrides = {
+    chromium = "0,23,46\n";
+    hyprland = ''
+      local active_border_color = "rgb(faa968)"
+
+      hl.config({
+        general = {
+          col = {
+            active_border = active_border_color,
+          },
+        },
+
+        group = {
+          col = {
+            border_active = active_border_color,
+          },
+        },
+      })
+    '';
+    swayosd = ''
+      @define-color background-color #00172e;
+      @define-color border-color #134e5a;
+      @define-color label #f6dcac;
+      @define-color image #f6dcac;
+      @define-color progress #e97b3c;
+    '';
+    waybar = ''
+      @define-color bg #00172e;
+      @define-color foreground #f6dcac;
+      @define-color background alpha(@bg, 0.8);
+    '';
+  };
 }

@@ -24,5 +24,7 @@
     color14 = "#d7827e";
     color15 = "#575279";
   };
-  overrides = {};
+  overrides = {
+    chromium = "210,196,219\n";
+  };
 }

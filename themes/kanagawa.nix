@@ -24,5 +24,26 @@
     color14 = "#7aa89f";
     color15 = "#dcd7ba";
   };
-  overrides = {};
+  overrides = {
+    hyprland = ''
+      local active_border_color = "rgb(dcd7ba)"
+
+      hl.config({
+        general = {
+          col = {
+            active_border = active_border_color,
+          },
+        },
+
+        group = {
+          col = {
+            border_active = active_border_color,
+          },
+        },
+      })
+
+      -- Kanagawa backdrop is too strong for default opacity.
+      o.window({ tag = "terminal" }, { opacity = "0.98 0.95" })
+    '';
+  };
 }
