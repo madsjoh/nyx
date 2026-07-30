@@ -29,6 +29,6 @@ in
     (lib.mkIf cfg.gum.enable (import ./integration/gum.nix integrationArgs))
     (lib.mkIf cfg.obsidian.enable (import ./integration/obsidian.nix integrationArgs))
     (lib.mkIf cfg.chromium.enable (import ./integration/chromium.nix integrationArgs))
-    (lib.mkIf cfg.keyboard-rgb.enable (import ./integration/keyboard-rgb.nix integrationArgs))
+    (lib.mkIf cfg."keyboard-rgb".enable (import ./integration/keyboard-rgb.nix integrationArgs))
   ]);
 }
