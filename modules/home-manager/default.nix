@@ -21,7 +21,18 @@ in
 
       home.activation.nyxBackgroundSymlink = lib.hm.dag.entryAfter ["writeBoundary"] ''
         mkdir -p "$HOME/.local/state/nyx/current"
-        ln -sfn "$HOME/.config/nyx/backgrounds/${cfg.theme}" "$HOME/.local/state/nyx/current/background"
+        ln -sfn "$HOME/.config/nyx/backgrounds/${cfg.theme}" "$HOME/.local/state/nyx/current/backgrounds"
+
+        if hyprctl hyprpaper listactive &>/dev/null; then
+          BACKGROUNDS_DIR="$HOME/.local/state/nyx/current/backgrounds"
+          for bg in ${lib.concatStringsSep " " (theme.backgrounds or [])}; do
+            hyprctl hyprpaper preload "$BACKGROUNDS_DIR/$bg"
+          done
+          FIRST_BG=$(echo "${lib.concatStringsSep " " (theme.backgrounds or [])}" | cut -d' ' -f1)
+          if [[ -n "$FIRST_BG" ]]; then
+            hyprctl hyprpaper wallpaper ",$BACKGROUNDS_DIR/$FIRST_BG"
+          fi
+        fi
       '';
     })
 
