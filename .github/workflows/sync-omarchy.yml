@@ -62,24 +62,32 @@ jobs:
             echo "msg=omarchy:${{ steps.current.outputs.hash }}..${{ steps.latest.outputs.hash }}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Create PR
+      - name: Push branch and create PR
         if: steps.diff.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          commit-message: "sync: omarchy ${{ steps.latest.outputs.hash }}"
-          title: "sync: omarchy themes and templates update"
-          body: |
-            Automated sync from omarchy.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BRANCH="sync/omarchy-${{ steps.latest.outputs.hash }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add .
+          git commit -m "sync: omarchy ${{ steps.latest.outputs.hash }}"
+          git push origin "$BRANCH"
 
-            **Source commit:** ${{ steps.latest.outputs.hash }}
-            **Previous sync:** ${{ steps.current.outputs.hash }}
+          gh pr create \
+            --title "sync: omarchy themes and templates update" \
+            --body "Automated sync from omarchy.
 
-            Changes may include:
-            - New or removed themes
-            - Updated color values
-            - New or removed templates
-            - New per-theme override files (may need manual review)
+          **Source commit:** ${{ steps.latest.outputs.hash }}
+          **Previous sync:** ${{ steps.current.outputs.hash }}
 
-            Review the diff for significant changes.
-          branch: sync/omarchy-${{ steps.latest.outputs.hash }}
-          delete-branch: true
+          Changes may include:
+          - New or removed themes
+          - Updated color values
+          - New or removed templates
+          - New per-theme override files (may need manual review)
+
+          Review the diff for significant changes." \
+            --base "${GITHUB_REF_NAME}" \
+            --head "$BRANCH"
