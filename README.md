@@ -1,6 +1,6 @@
 # Nyx
 
-Nyx provides the 21 themes from [Omarchy](https://omarchy.org) as a home-manager module for NixOS systems running Hyprland/Wayland.
+Nyx provides the 21 themes from [Omarchy](https://omarchy.org) as a home-manager module for NixOS systems running Hyprland.
 
 ## Usage
 
