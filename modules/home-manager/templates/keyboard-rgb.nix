@@ -1,2 +1,4 @@
 { colors }:
-"${colors.accent}\n"
+''
+${colors.accent}
+''

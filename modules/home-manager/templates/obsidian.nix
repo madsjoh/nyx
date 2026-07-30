@@ -1,6 +1,6 @@
 { colors }:
 ''
-/* Nyx Theme for Obsidian */
+/* Omarchy Theme for Obsidian */
 
 .theme-dark, .theme-light {
   /* Core colors */

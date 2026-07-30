@@ -1,2 +1,4 @@
 { colors, helpers }:
-"${helpers.rgb colors.background}\n"
+''
+${helpers.rgb colors.background}
+''

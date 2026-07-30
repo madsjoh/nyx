@@ -1,0 +1,85 @@
+name: Sync Omarchy themes
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Mondays at 06:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout nyx
+        uses: actions/checkout@v4
+
+      - name: Checkout omarchy
+        uses: actions/checkout@v4
+        with:
+          repository: basecamp/omarchy
+          path: omarchy
+
+      - name: Read current sync hash
+        id: current
+        run: |
+          if [[ -f .omarchy-sync ]]; then
+            echo "hash=$(cat .omarchy-sync)" >> "$GITHUB_OUTPUT"
+          else
+            echo "hash=none" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Read latest omarchy hash
+        id: latest
+        run: |
+          cd omarchy
+          echo "hash=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Check if sync needed
+        id: check
+        run: |
+          if [[ "${{ steps.current.outputs.hash }}" == "${{ steps.latest.outputs.hash }}" ]]; then
+            echo "Already synced to ${{ steps.latest.outputs.hash }}"
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Sync needed: ${{ steps.current.outputs.hash }} -> ${{ steps.latest.outputs.hash }}"
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run sync
+        if: steps.check.outputs.needed == 'true'
+        run: bash scripts/sync-omarchy.sh omarchy
+
+      - name: Check for changes
+        if: steps.check.outputs.needed == 'true'
+        id: diff
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "msg=omarchy:${{ steps.current.outputs.hash }}..${{ steps.latest.outputs.hash }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create PR
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "sync: omarchy ${{ steps.latest.outputs.hash }}"
+          title: "sync: omarchy themes and templates update"
+          body: |
+            Automated sync from omarchy.
+
+            **Source commit:** ${{ steps.latest.outputs.hash }}
+            **Previous sync:** ${{ steps.current.outputs.hash }}
+
+            Changes may include:
+            - New or removed themes
+            - Updated color values
+            - New or removed templates
+            - New per-theme override files (may need manual review)
+
+            Review the diff for significant changes.
+          branch: sync/omarchy-${{ steps.latest.outputs.hash }}
+          delete-branch: true
