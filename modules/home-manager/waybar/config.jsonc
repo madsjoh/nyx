@@ -41,7 +41,7 @@
     }
   },
   "custom/nyx": {
-    "format": "󰣇",
+    "format": "",
     "on-click": "walker",
     "on-click-right": "alacritty",
     "tooltip-format": "Nyx Menu\n\nSuper + Space"
