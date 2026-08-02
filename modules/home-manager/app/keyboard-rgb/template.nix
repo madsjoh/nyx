@@ -1,0 +1,4 @@
+{ colors }:
+''
+${colors.accent}
+''
