@@ -8,14 +8,17 @@ hl.config({
     kb_rules = "",
     follow_mouse = 1,
     sensitivity = 0,
+    accel_profile = "adaptive",
 
     repeat_rate = 40,
     repeat_delay = 250,
     numlock_by_default = true,
 
     touchpad = {
-      natural_scroll = false,
+      natural_scroll = true,
+      tap_to_click = true,
       clickfinger_behavior = true,
+      disable_while_typing = true,
       scroll_factor = 0.4,
     },
   },
