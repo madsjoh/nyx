@@ -70,5 +70,6 @@ in
     "hypr/.luarc.json".text = rf ".luarc.json";
 
     "nyx/current/hyprland.lua".text = themeOverride;
+    "nyx/scripts/cycle-background.sh".text = rf "cycle-background.sh";
   };
 }

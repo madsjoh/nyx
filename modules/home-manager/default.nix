@@ -34,6 +34,7 @@ in
         # Make Nyx scripts executable
         chmod +x "$HOME"/.config/nyx/waybar/*.sh 2>/dev/null || true
         chmod +x "$HOME"/.config/nyx/waybar/indicators/*.sh 2>/dev/null || true
+        chmod +x "$HOME"/.config/nyx/scripts/*.sh 2>/dev/null || true
 
         # Hyprpaper live wallpaper loading
         if hyprctl hyprpaper listactive &>/dev/null; then
