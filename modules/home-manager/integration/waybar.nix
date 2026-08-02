@@ -185,10 +185,24 @@ tooltip {
   margin: 8.75px 0 0 0;
 }
     '';
+  };
 
-    "nyx/waybar/weather.sh".text = rf "weather.sh";
-    "nyx/waybar/indicators/idle.sh".text = rf "indicators/idle.sh";
-    "nyx/waybar/indicators/notification-silencing.sh".text = rf "indicators/notification-silencing.sh";
-    "nyx/waybar/indicators/screen-recording.sh".text = rf "indicators/screen-recording.sh";
+  home.file = {
+    ".config/nyx/waybar/weather.sh" = {
+      text = rf "weather.sh";
+      executable = true;
+    };
+    ".config/nyx/waybar/indicators/idle.sh" = {
+      text = rf "indicators/idle.sh";
+      executable = true;
+    };
+    ".config/nyx/waybar/indicators/notification-silencing.sh" = {
+      text = rf "indicators/notification-silencing.sh";
+      executable = true;
+    };
+    ".config/nyx/waybar/indicators/screen-recording.sh" = {
+      text = rf "indicators/screen-recording.sh";
+      executable = true;
+    };
   };
 }
