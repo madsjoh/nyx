@@ -62,5 +62,9 @@ in
     (lib.mkIf cfg."swayosd".enable (import ./integration/swayosd.nix integrationArgs))
     (lib.mkIf cfg."walker".enable (import ./integration/walker.nix integrationArgs))
     (lib.mkIf cfg."waybar".enable (import ./integration/waybar.nix integrationArgs))
+
+    (lib.mkIf cfg."hyprland".enable {
+      wayland.windowManager.hyprland.enable = lib.mkForce false;
+    })
   ]);
 }
