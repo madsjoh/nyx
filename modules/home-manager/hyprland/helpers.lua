@@ -83,13 +83,34 @@ function o.cycle_background()
   local bg_dir = paths.state_home .. "/nyx/current/backgrounds"
   local bg_link = paths.state_home .. "/nyx/current/background"
 
-  local handle = io.popen("ls \"" .. bg_dir .. "\" | sort -R | head -1")
+  local handle = io.popen("ls \"" .. bg_dir .. "\" | sort")
   if not handle then return end
-  local bg = handle:read("*l")
+  local files = {}
+  for line in handle:lines() do
+    table.insert(files, line)
+  end
   handle:close()
-  if not bg or bg == "" then return end
+  if #files == 0 then return end
 
-  hl.exec_cmd("ln -sfn \"" .. bg_dir .. "/" .. bg .. "\" \"" .. bg_link .. "\"")
+  local current_name
+  local link_handle = io.popen("readlink \"" .. bg_link .. "\"")
+  if link_handle then
+    local target = link_handle:read("*l")
+    link_handle:close()
+    current_name = target and target:match("([^/]+)$")
+  end
+
+  local next_bg = files[1]
+  if current_name then
+    for i, name in ipairs(files) do
+      if name == current_name then
+        next_bg = files[(i % #files) + 1]
+        break
+      end
+    end
+  end
+
+  hl.exec_cmd("ln -sfn \"" .. bg_dir .. "/" .. next_bg .. "\" \"" .. bg_link .. "\"")
   hl.exec_cmd("killall -q swaybg 2>/dev/null || true")
   hl.exec_cmd("swaybg -i \"" .. bg_link .. "\" -m fill")
 end
