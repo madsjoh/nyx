@@ -16,7 +16,7 @@ in
     ({
       home.file = lib.listToAttrs (map (bg: {
         name = ".config/nyx/backgrounds/${cfg.theme}/${bg}";
-        value = { source = ../../../themes/${cfg.theme}/backgrounds/${bg}; };
+        value = { source = ../../themes/${cfg.theme}/backgrounds/${bg}; };
       }) (theme.backgrounds or []));
 
       home.activation.nyxSetup = lib.hm.dag.entryAfter ["writeBoundary"] ''
