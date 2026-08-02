@@ -54,7 +54,7 @@ CFG=$(nix eval --impure --raw --expr "
     themes = import ./themes;
     theme = themes.\"$THEME\";
     helpers = (import ./modules/home-manager/lib.nix { inherit lib; });
-    mod = import ./modules/home-manager/app/hyprland/default.nix { inherit theme helpers; };
+    mod = import ./modules/home-manager/apps/hyprland/default.nix { inherit theme helpers; };
   in mod.xdg.configFile.\"hypr/hyprland.lua\".text
 " 2>&1)
 
@@ -70,7 +70,7 @@ CFG=$(nix eval --impure --raw --expr "
     themes = import ./themes;
     theme = themes.\"$THEME\";
     helpers = (import ./modules/home-manager/lib.nix { inherit lib; });
-    mod = import ./modules/home-manager/app/alacritty/default.nix { inherit theme helpers; };
+    mod = import ./modules/home-manager/apps/alacritty/default.nix { inherit theme helpers; };
   in mod.xdg.configFile.\"alacritty/alacritty.toml\".text
 " 2>&1)
 
@@ -86,7 +86,7 @@ CFG=$(nix eval --impure --raw --expr "
     themes = import ./themes;
     theme = themes.\"$THEME\";
     helpers = (import ./modules/home-manager/lib.nix { inherit lib; });
-    mod = import ./modules/home-manager/app/hyprlock/default.nix { inherit theme helpers; };
+    mod = import ./modules/home-manager/apps/hyprlock/default.nix { inherit theme helpers; };
   in mod.xdg.configFile.\"hypr/hyprlock.conf\".text
 " 2>&1)
 
@@ -102,7 +102,7 @@ CFG=$(nix eval --impure --raw --expr "
     themes = import ./themes;
     theme = themes.\"$THEME\";
     helpers = (import ./modules/home-manager/lib.nix { inherit lib; });
-    mod = import ./modules/home-manager/app/waybar/default.nix { inherit theme helpers; };
+    mod = import ./modules/home-manager/apps/waybar/default.nix { inherit theme helpers; };
   in mod.xdg.configFile.\"waybar/config.jsonc\".text
 " 2>&1)
 
