@@ -24,8 +24,12 @@ in
         mkdir -p "$HOME/.local/state/nyx/current"
         mkdir -p "$HOME/.local/state/nyx/toggles/hypr"
 
-        # Symlink backgrounds to current theme for consistent runtime paths
+        # Symlink backgrounds dir and first image for consistent runtime paths
         ln -sfn "$HOME/.config/nyx/backgrounds/${cfg.theme}" "$HOME/.local/state/nyx/current/backgrounds"
+        FIRST_BG=$(echo "${lib.concatStringsSep " " (theme.backgrounds or [])}" | cut -d' ' -f1)
+        if [[ -n "$FIRST_BG" ]]; then
+          ln -sfn "$HOME/.config/nyx/backgrounds/${cfg.theme}/$FIRST_BG" "$HOME/.local/state/nyx/current/background"
+        fi
 
         # Make Nyx scripts executable
         chmod +x "$HOME"/.config/nyx/waybar/*.sh 2>/dev/null || true
