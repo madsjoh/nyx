@@ -1,5 +1,24 @@
 { colors, helpers }:
 ''
+[main]
+term=xterm-256color
+font=JetBrainsMono Nerd Font:size=9
+pad=14x14
+initial-window-mode=windowed
+workers=0
+
+[scrollback]
+lines=10000
+
+[cursor]
+style=block
+blink=no
+
+[key-bindings]
+clipboard-copy=Control+Insert Control+Shift+c XF86Copy
+primary-paste=none
+clipboard-paste=Shift+Insert Control+Shift+v XF86Paste
+
 [colors-dark]
 foreground=${helpers.strip colors.foreground}
 background=${helpers.strip colors.background}

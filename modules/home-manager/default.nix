@@ -19,10 +19,19 @@ in
         value = { source = ../../../themes/${cfg.theme}/backgrounds/${bg}; };
       }) (theme.backgrounds or []));
 
-      home.activation.nyxBackgroundSymlink = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      home.activation.nyxSetup = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        # Create Nyx state directories
         mkdir -p "$HOME/.local/state/nyx/current"
+        mkdir -p "$HOME/.local/state/nyx/toggles/hypr"
+
+        # Symlink backgrounds to current theme for consistent runtime paths
         ln -sfn "$HOME/.config/nyx/backgrounds/${cfg.theme}" "$HOME/.local/state/nyx/current/backgrounds"
 
+        # Make Nyx scripts executable
+        chmod +x "$HOME"/.config/nyx/waybar/*.sh 2>/dev/null || true
+        chmod +x "$HOME"/.config/nyx/waybar/indicators/*.sh 2>/dev/null || true
+
+        # Hyprpaper live wallpaper loading
         if hyprctl hyprpaper listactive &>/dev/null; then
           BACKGROUNDS_DIR="$HOME/.local/state/nyx/current/backgrounds"
           for bg in ${lib.concatStringsSep " " (theme.backgrounds or [])}; do

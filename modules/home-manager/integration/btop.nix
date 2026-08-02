@@ -1,5 +1,15 @@
 { theme, helpers }:
+
+let
+  btopDir = ../btop;
+  rf = name: builtins.readFile (btopDir + ("/" + name));
+
+  themeContent = theme.overrides.btop or
+    (import ../templates/btop.nix { colors = theme.colors; });
+in
 {
-  xdg.configFile."btop/themes/nyx.theme".text =
-    theme.overrides.btop or (import ../templates/btop.nix { colors = theme.colors; inherit helpers; });
+  xdg.configFile = {
+    "btop/btop.conf".text = rf "btop.conf";
+    "btop/themes/nyx.theme".text = themeContent;
+  };
 }
