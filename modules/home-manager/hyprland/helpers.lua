@@ -90,6 +90,6 @@ function o.cycle_background()
   if not bg or bg == "" then return end
 
   hl.exec_cmd("ln -sfn \"" .. bg_dir .. "/" .. bg .. "\" \"" .. bg_link .. "\"")
-  hl.exec_cmd("pkill swaybg 2>/dev/null")
-  hl.exec_cmd("swaybg -i \"" .. bg_link .. "\" -m fill &")
+  hl.exec_cmd("killall -q swaybg 2>/dev/null || true")
+  hl.exec_cmd("swaybg -i \"" .. bg_link .. "\" -m fill")
 end
