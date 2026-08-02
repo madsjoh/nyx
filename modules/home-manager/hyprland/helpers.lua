@@ -77,3 +77,19 @@ function o.window(match, rules)
 
   hl.window_rule(rules)
 end
+
+function o.cycle_background()
+  local paths = require("hypr.nyx.paths")
+  local bg_dir = paths.state_home .. "/nyx/current/backgrounds"
+  local bg_link = paths.state_home .. "/nyx/current/background"
+
+  local handle = io.popen("ls \"" .. bg_dir .. "\" | sort -R | head -1")
+  if not handle then return end
+  local bg = handle:read("*l")
+  handle:close()
+  if not bg or bg == "" then return end
+
+  hl.exec_cmd("ln -sfn \"" .. bg_dir .. "/" .. bg .. "\" \"" .. bg_link .. "\"")
+  hl.exec_cmd("pkill swaybg 2>/dev/null")
+  hl.exec_cmd("swaybg -i \"" .. bg_link .. "\" -m fill &")
+end

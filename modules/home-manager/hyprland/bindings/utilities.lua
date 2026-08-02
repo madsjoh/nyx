@@ -25,6 +25,6 @@ o.bind("SUPER + CTRL + ALT + Z", "Reset zoom", function()
   hl.config({ cursor = { zoom_factor = 1 } })
 end)
 
-o.bind("SUPER + CTRL + SPACE", "Next background", 'sh -c \'BG=$(ls "$HOME"/.local/state/nyx/current/backgrounds/ | sort -R | head -1); ln -sfn "$HOME/.local/state/nyx/current/backgrounds/$BG" "$HOME/.local/state/nyx/current/background"; pkill swaybg; swaybg -i "$HOME/.local/state/nyx/current/background" -m fill &\'')
+o.bind("SUPER + CTRL + SPACE", "Next background", function() o.cycle_background() end)
 
 o.bind("SUPER + CTRL + L", "Lock system", "loginctl lock-session")
