@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Simple weather script using wttr.in
 weather=$(curl -s "wttr.in/?format=%C+%t" 2>/dev/null)
