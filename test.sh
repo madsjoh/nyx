@@ -38,7 +38,7 @@ for app in alacritty btop chromium foot ghostty gum helix hyprland hyprlock keyb
       theme = themes.\"$THEME\";
       helpers = (import ./modules/home-manager/lib.nix { inherit lib; });
       mod = import (./modules/home-manager/integration + \"/$app.nix\") { inherit theme helpers; };
-    in builtins.length (builtins.attrNames mod.xdg.configFile)
+    in builtins.length (builtins.attrNames (mod.xdg.configFile or {}))
   " 2>&1)
   echo "  $app: $COUNT files"
 done

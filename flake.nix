@@ -6,5 +6,9 @@
       nyx = import ./modules/home-manager;
       default = import ./modules/home-manager;
     };
+    nixosModules = {
+      nyx = import ./modules/nixos;
+      default = import ./modules/nixos;
+    };
   };
 }

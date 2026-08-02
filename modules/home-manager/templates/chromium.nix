@@ -1,4 +1,4 @@
 { colors, helpers }:
 ''
-${helpers.rgb colors.background}
+{"BrowserThemeColor": "${colors.background}", "BrowserColorScheme": "device"}
 ''
