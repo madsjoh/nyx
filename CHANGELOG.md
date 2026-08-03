@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/madsjoh/nyx/compare/v0.2.0...v0.3.0) (2026-08-03)
+
+
+### Features
+
+* change default theme to tokyo-night ([#4](https://github.com/madsjoh/nyx/issues/4)) ([aa1ed95](https://github.com/madsjoh/nyx/commit/aa1ed9570dd59c2f44847723dc78bbee413d3271))
+
 ## [0.2.0](https://github.com/madsjoh/nyx/compare/v0.1.0...v0.2.0) (2026-08-03)
 
 
