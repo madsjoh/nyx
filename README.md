@@ -36,16 +36,7 @@ All apps are enabled by default. Disable any you don't want themed with `nyx.<ap
 
 ## Supported applications
 
-Nyx themes these 17 apps — all enabled by default, individually toggleable:
-
-| | | |
-|---|---|---|
-| alacritty | btop | chromium |
-| foot | ghostty | gum |
-| helix | hyprland | hyprlock |
-| keyboard-rgb | kitty | mako |
-| obsidian | quickshell | swayosd |
-| walker | waybar | |
+alacritty, btop, chromium, foot, ghostty, gum, helix, hyprland, hyprlock, keyboard-rgb, kitty, mako, obsidian, quickshell, swayosd, walker, waybar
 
 ## Themes
 
