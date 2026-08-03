@@ -8,7 +8,6 @@
     { "type": "revert", "section": "Reverts" },
     { "type": "docs", "section": "Documentation" },
     { "type": "chore", "section": "Dependency Updates", "scope": "deps" },
-    { "type": "chore", "section": "Miscellaneous" },
     { "type": "ci", "section": "Miscellaneous" },
     { "type": "refactor", "section": "Miscellaneous" }
   ]
