@@ -16,5 +16,8 @@ result-*
 # Local tooling
 .superpowers
 
+# Design docs (local only)
+docs/superpowers
+
 # CI checkout
 omarchy
