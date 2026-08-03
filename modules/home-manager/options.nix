@@ -21,7 +21,7 @@ in
 
     theme = lib.mkOption {
       type = lib.types.enum themeNames;
-      default = "gruvbox";
+      default = "tokyo-night";
       description = "Active Nyx theme";
     };
   } // lib.foldl' (acc: name: acc // mkAppOption name) {} appNames;
