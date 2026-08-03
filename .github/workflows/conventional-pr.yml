@@ -10,7 +10,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: CondeNast/conventional-pull-request-action@24f2af2b7f223b255eb93f3ec4ecec97b3a6dbb0 # v0.5.0
+      - uses: CondeNast/conventional-pull-request-action@3ce30fdb4d2beef8b941f23a1114dd8188eba082 # v0.2.0
         with:
           ignoreCommits: true
           commitLintRulesPath: ./.github/commitlint.rules.js
