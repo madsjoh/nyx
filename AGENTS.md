@@ -33,7 +33,7 @@ themes/
 ## Commands
 
 ```bash
-./test.sh [theme]   # validate all integrations generate valid configs (default: gruvbox)
+./test.sh [theme]   # validate all integrations generate valid configs (default: tokyo-night)
 ./dump.sh [theme]   # dump all generated configs to a temp dir for manual inspection
 
 nix flake check     # verify flake evaluates

@@ -58,7 +58,7 @@ catppuccin · catppuccin-latte · ethereal · everforest · flexoki-light · gru
 | Option | Type | Default | Description |
 |---|---|---|---|
 | `nyx.enable` | bool | `false` | Enable Nyx theming |
-| `nyx.theme` | enum | `"gruvbox"` | Active theme |
+| `nyx.theme` | enum | `"tokyo-night"` | Active theme |
 | `nyx.<app>.enable` | bool | `true` | Toggle theming per app |
 
 ## Development

@@ -3,7 +3,7 @@
 # Usage: ./test.sh [theme-name]
 set -euo pipefail
 
-THEME="${1:-gruvbox}"
+THEME="${1:-tokyo-night}"
 cd "$(dirname "$0")"
 
 echo "=== Nyx Test: theme=$THEME ==="
@@ -74,7 +74,7 @@ CFG=$(nix eval --impure --raw --expr "
   in mod.xdg.configFile.\"alacritty/alacritty.toml\".text
 " 2>&1)
 
-if echo "$CFG" | grep -q "background = \"#282828\""; then
+if echo "$CFG" | grep -q "background = \"#1a1b26\""; then
   echo "✓ alacritty has theme background color"
 else
   echo "✗ alacritty missing theme colors"
