@@ -1,0 +1,18 @@
+name: conventional-pr
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: CondeNast/conventional-pull-request-action@3ce30fdb4d2beef8b941f23a1114dd8188eba082 # v0.2.0
+        with:
+          ignoreCommits: true
+          commitLintRulesPath: ./.github/commitlint.rules.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
