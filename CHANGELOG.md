@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/madsjoh/nyx/compare/v0.3.0...v0.3.1) (2026-08-05)
+
+
+### Bug Fixes
+
+* **waybar:** drop unclickable expand icon ([#6](https://github.com/madsjoh/nyx/issues/6)) ([de2a622](https://github.com/madsjoh/nyx/commit/de2a6227630330577bd6ff4799d163f5f6f2d841))
+
 ## [0.3.0](https://github.com/madsjoh/nyx/compare/v0.2.0...v0.3.0) (2026-08-03)
 
 
