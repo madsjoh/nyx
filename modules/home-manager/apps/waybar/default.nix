@@ -63,10 +63,6 @@ ${themeCSS}
   margin-right: 13px;
 }
 
-#custom-expand-icon {
-  margin-right: 18px;
-}
-
 tooltip {
   padding: 2px;
 }
@@ -132,7 +128,6 @@ tooltip {
 .left #tray, .right #tray { margin: 0 0 16px 0; }
 .left #bluetooth, .right #bluetooth { margin: 1.5px 0; padding: 6px 0; min-height: 12px; }
 .left #network, .right #network { margin: 1.5px 0; padding: 6px 0; min-height: 12px; }
-.left #custom-expand-icon, .right #custom-expand-icon { margin: 1.5px 0; padding: 6px 0; min-height: 12px; }
 .left #clock, .right #clock { margin: 8.75px 0 0 0; }
 .left #custom-weather, .right #custom-weather { margin: 1.5px 0; padding: 6px 0; min-height: 12px; min-width: 14px; margin-right: 4px; }
 
@@ -142,27 +137,6 @@ tooltip {
   margin: 5px 0 0 0;
   min-width: 0;
   min-height: 12px;
-}
-
-#custom-expand-icon.vertical,
-.left #custom-expand-icon.horizontal,
-.right #custom-expand-icon.horizontal {
-  opacity: 0;
-  font-size: 0;
-  min-width: 0;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-}
-
-.left #custom-expand-icon.vertical,
-.right #custom-expand-icon.vertical {
-  opacity: 1;
-  font-size: inherit;
-  min-width: 0;
-  min-height: 12px;
-  margin: 1.5px 0;
-  padding: 6px 0;
 }
 
 #clock.vertical,
