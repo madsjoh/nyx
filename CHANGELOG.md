@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/madsjoh/nyx/compare/v0.3.1...v0.3.2) (2026-08-05)
+
+
+### Bug Fixes
+
+* **waybar:** use nerd font weather icons ([#8](https://github.com/madsjoh/nyx/issues/8)) ([0b3de0a](https://github.com/madsjoh/nyx/commit/0b3de0a818dd3125620a51db15db706f688111bb))
+
 ## [0.3.1](https://github.com/madsjoh/nyx/compare/v0.3.0...v0.3.1) (2026-08-05)
 
 
