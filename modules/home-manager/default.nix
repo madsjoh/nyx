@@ -89,6 +89,12 @@ in
           WantedBy = [ "graphical-session.target" ];
         };
       };
+      home.activation.linkElephantProviders = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        mkdir -p $HOME/.config/elephant/providers
+        for so in ${elephantPackage}/lib/elephant/providers/*.so; do
+          ln -sfn "$so" "$HOME/.config/elephant/providers/$(basename "$so")"
+        done
+      '';
       home.activation.startElephant = lib.hm.dag.entryAfter [ "reloadSystemd" ] ''
         $DRY_RUN_CMD systemctl --user start elephant 2>/dev/null || true
       '';
