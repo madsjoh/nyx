@@ -1,10 +1,14 @@
 {
   description = "Nyx — Omarchy themes for NixOS + Hyprland (home-manager module)";
 
-  outputs = { self }: {
+  inputs = {
+    walker.url = "github:abenz1267/walker";
+  };
+
+  outputs = { self, walker }: {
     homeManagerModules = {
-      nyx = import ./modules/home-manager;
-      default = import ./modules/home-manager;
+      nyx = import ./modules/home-manager { inherit walker; };
+      default = import ./modules/home-manager { inherit walker; };
     };
     nixosModules = {
       nyx = import ./modules/nixos;
