@@ -96,7 +96,7 @@ in
         done
       '';
       home.activation.startElephant = lib.hm.dag.entryAfter [ "reloadSystemd" ] ''
-        $DRY_RUN_CMD systemctl --user start elephant 2>/dev/null || true
+        $DRY_RUN_CMD systemctl --user restart elephant 2>/dev/null || true
       '';
     }))
     (lib.mkIf cfg."waybar".enable (import ./apps/waybar/default.nix integrationArgs))
