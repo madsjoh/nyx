@@ -1,4 +1,6 @@
-{ config, lib, ... }:
+{ walker ? null }:
+
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.nyx;
@@ -64,6 +66,12 @@ in
     (lib.mkIf cfg."quickshell".enable (import ./apps/quickshell/default.nix integrationArgs))
     (lib.mkIf cfg."swayosd".enable (import ./apps/swayosd/default.nix integrationArgs))
     (lib.mkIf cfg."walker".enable (import ./apps/walker/default.nix integrationArgs))
+    (lib.mkIf (cfg."walker".enable && walker != null) {
+      home.packages = [
+        walker.packages.${pkgs.stdenv.system}.walker
+        walker.inputs.elephant.packages.${pkgs.stdenv.system}.default
+      ];
+    })
     (lib.mkIf cfg."waybar".enable (import ./apps/waybar/default.nix integrationArgs))
 
     (lib.mkIf cfg."hyprland".enable {

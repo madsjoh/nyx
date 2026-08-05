@@ -129,6 +129,6 @@ child:selected {
 
     "walker/themes/nyx/layout.xml".text = rf "themes/nyx/layout.xml";
     "walker/restart.conf".text = rf "restart.conf";
-    "walker/walker.desktop".text = rf "walker.desktop";
+    "autostart/walker.desktop".text = rf "walker.desktop";
   };
 }
