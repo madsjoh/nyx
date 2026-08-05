@@ -66,12 +66,30 @@ in
     (lib.mkIf cfg."quickshell".enable (import ./apps/quickshell/default.nix integrationArgs))
     (lib.mkIf cfg."swayosd".enable (import ./apps/swayosd/default.nix integrationArgs))
     (lib.mkIf cfg."walker".enable (import ./apps/walker/default.nix integrationArgs))
-    (lib.mkIf (cfg."walker".enable && walker != null) {
-      home.packages = [
-        walker.packages.${pkgs.stdenv.system}.walker
-        walker.inputs.elephant.packages.${pkgs.stdenv.system}.default
-      ];
-    })
+    (lib.mkIf (cfg."walker".enable && walker != null) (let
+      walkerPackage = walker.packages.${pkgs.stdenv.system}.walker;
+      elephantPackage = walker.inputs.elephant.packages.${pkgs.stdenv.system}.default;
+    in {
+      home.packages = [ walkerPackage elephantPackage ];
+      systemd.user.services.elephant = {
+        Unit = {
+          Description = "Elephant launcher backend";
+          After = [ "graphical-session.target" ];
+          PartOf = [ "graphical-session.target" ];
+          ConditionEnvironment = "WAYLAND_DISPLAY";
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${elephantPackage}/bin/elephant";
+          Restart = "on-failure";
+          RestartSec = 1;
+          ExecStopPost = "${pkgs.coreutils}/bin/rm -f %t/elephant.sock";
+        };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
+    }))
     (lib.mkIf cfg."waybar".enable (import ./apps/waybar/default.nix integrationArgs))
 
     (lib.mkIf cfg."hyprland".enable {
