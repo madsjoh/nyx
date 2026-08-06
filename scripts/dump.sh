@@ -5,7 +5,7 @@ set -euo pipefail
 
 THEME="${1:-gruvbox}"
 OUTDIR="$(mktemp -d -t nyx-dump-XXXXXX)"
-cd "$(dirname "$0")"
+cd "$(dirname "$(readlink -f "$0")")/.."
 echo "Theme: $THEME  →  $OUTDIR"
 
 count=0
