@@ -4,7 +4,7 @@
 set -euo pipefail
 
 THEME="${1:-tokyo-night}"
-cd "$(dirname "$0")"
+cd "$(dirname "$(readlink -f "$0")")/.."
 
 echo "=== Nyx Test: theme=$THEME ==="
 

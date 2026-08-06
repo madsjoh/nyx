@@ -64,8 +64,8 @@ catppuccin · catppuccin-latte · ethereal · everforest · flexoki-light · gru
 ## Development
 
 ```bash
-./test.sh [theme]   # validate all integrations generate valid configs
-./dump.sh [theme]   # dump generated configs to a temp directory for inspection
+./scripts/test.sh [theme]   # validate all integrations generate valid configs
+./scripts/dump.sh [theme]   # dump generated configs to a temp directory for inspection
 ```
 
 ## License
