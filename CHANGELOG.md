@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0](https://github.com/madsjoh/nyx/compare/v0.3.2...v0.4.0) (2026-08-06)
+
+
+### Features
+
+* **walker:** add elephant systemd service ([#13](https://github.com/madsjoh/nyx/issues/13)) ([f177399](https://github.com/madsjoh/nyx/commit/f177399aebaf4fd8504ecd77bd95437e204269aa))
+* **walker:** auto-install walker and elephant ([#10](https://github.com/madsjoh/nyx/issues/10)) ([63ab794](https://github.com/madsjoh/nyx/commit/63ab794475d88c81ae9be8ee7bf4a576b01d180e))
+* **walker:** start elephant via hyprland exec-once ([#14](https://github.com/madsjoh/nyx/issues/14)) ([891bd62](https://github.com/madsjoh/nyx/commit/891bd623c653b044d2b57d290cac08290d34fd0b))
+
+
+### Bug Fixes
+
+* **walker:** start elephant via home activation script ([#15](https://github.com/madsjoh/nyx/issues/15)) ([6985ae2](https://github.com/madsjoh/nyx/commit/6985ae264151ad226abab941bdb2f36ff43830fa))
+* **walker:** symlink elephant providers to config ([#16](https://github.com/madsjoh/nyx/issues/16)) ([2d7c62f](https://github.com/madsjoh/nyx/commit/2d7c62fa70371aaf838c332aa0d85f6cb2ace1c9))
+* **walker:** symlink providers and restart on switch ([#17](https://github.com/madsjoh/nyx/issues/17)) ([1097ae2](https://github.com/madsjoh/nyx/commit/1097ae2999a1af03495beba1f6e1aa76379422e8))
+
 ## [0.3.2](https://github.com/madsjoh/nyx/compare/v0.3.1...v0.3.2) (2026-08-05)
 
 
