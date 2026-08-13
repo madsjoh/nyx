@@ -2,11 +2,8 @@
 ''
 add_newline = true
 scan_timeout = 10
-format = "$directory$git_branch$git_status$fill$cmd_duration$status$character"
-right_format = "$time"
-
-[fill]
-symbol = " "
+format = "$directory$git_branch$git_status$character"
+right_format = "$cmd_duration$status$time"
 
 [character]
 success_symbol = "[❯](bold ${colors.color2})"
@@ -22,16 +19,13 @@ style = "${colors.color13}"
 
 [git_status]
 style = "${colors.color3}"
-prefix = " "
 
 [cmd_duration]
 style = "${colors.color8}"
-prefix = " "
 
 [status]
 symbol = "✖"
 style = "bold ${colors.color1}"
-prefix = " "
 
 [time]
 disabled = false
