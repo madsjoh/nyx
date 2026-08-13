@@ -12,13 +12,56 @@ $directory\
 $git_branch\
 $git_status\
 [](fg:${colors.color8} bg:${colors.color0})\
-$nodejs\
 $bun\
-$rust\
+$c\
+$cmake\
+$cobol\
+$conda\
+$cpp\
+$crystal\
+$dart\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$fennel\
+$fortran\
+$gleam\
 $golang\
-$php\
+$gradle\
+$haskell\
+$haxe\
+$helm\
 $java\
+$julia\
+$kotlin\
+$lua\
 $maven\
+$meson\
+$mojo\
+$nim\
+$nodejs\
+$ocaml\
+$odin\
+$perl\
+$php\
+$pixi\
+$pulumi\
+$purescript\
+$python\
+$raku\
+$red\
+$rlang\
+$ruby\
+$rust\
+$scala\
+$solidity\
+$spack\
+$swift\
+$typst\
+$vlang\
+$xmake\
+$zig\
 [](fg:${colors.color0} bg:${colors.background})\
 $time\
 [ ](fg:${colors.background})\
@@ -51,18 +94,78 @@ format = '[[ $symbol $branch ](fg:${colors.accent} bg:${colors.color8})]($style)
 style = "bg:${colors.color8}"
 format = '[[($all_status$ahead_behind )](fg:${colors.accent} bg:${colors.color8})]($style)'
 
-[nodejs]
-symbol = ""
-style = "bg:${colors.color0}"
-format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
-
 [bun]
 symbol = ""
 style = "bg:${colors.color0}"
 format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
-[rust]
-symbol = ""
+[c]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[cmake]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[cobol]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[conda]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[cpp]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[crystal]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[dart]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[dotnet]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[elixir]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[elm]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[erlang]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[fennel]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[fortran]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[gleam]
+symbol = ""
 style = "bg:${colors.color0}"
 format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
@@ -71,8 +174,23 @@ symbol = ""
 style = "bg:${colors.color0}"
 format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
-[php]
-symbol = ""
+[gradle]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[haxe]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[helm]
+symbol = ""
 style = "bg:${colors.color0}"
 format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
@@ -81,8 +199,148 @@ symbol = ""
 style = "bg:${colors.color0}"
 format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
+[julia]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[lua]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
 [maven]
 symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[meson]
+symbol = "󰔷"
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[mojo]
+symbol = "󰈸"
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[nim]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[ocaml]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[odin]
+symbol = "󰟢"
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[perl]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[php]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[pixi]
+symbol = "󰏗"
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[pulumi]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[purescript]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[python]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[raku]
+symbol = "󱖊"
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[red]
+symbol = "󱍼"
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[rlang]
+symbol = "󰟔"
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[ruby]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[rust]
+symbol = "󱘗"
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[scala]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[solidity]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[spack]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[swift]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[typst]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[vlang]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[xmake]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[zig]
+symbol = ""
 style = "bg:${colors.color0}"
 format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
