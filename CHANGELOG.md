@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.4.0](https://github.com/madsjoh/nyx/compare/v0.3.2...v0.4.0) (2026-08-13)
+
+
+### Features
+
+* **starship:** add starship prompt theming ([#19](https://github.com/madsjoh/nyx/issues/19)) ([223be8e](https://github.com/madsjoh/nyx/commit/223be8e970d9aae10ab5c9e33bcf3350348bc23d))
+* **starship:** adopt nerd font symbols preset ([#21](https://github.com/madsjoh/nyx/issues/21)) ([60d74bb](https://github.com/madsjoh/nyx/commit/60d74bbbe4c11eafd6f9253d2cea830f808929c5))
+* **starship:** adopt tokyo-night preset baseline ([#23](https://github.com/madsjoh/nyx/issues/23)) ([e69aa22](https://github.com/madsjoh/nyx/commit/e69aa22844b03b62c1281a390efcd367397ed9e9))
+* **starship:** remove time and command duration ([#22](https://github.com/madsjoh/nyx/issues/22)) ([249bf71](https://github.com/madsjoh/nyx/commit/249bf71802f836b777e04b283ab2cb7384446291))
+* **walker:** add elephant systemd service ([#13](https://github.com/madsjoh/nyx/issues/13)) ([f177399](https://github.com/madsjoh/nyx/commit/f177399aebaf4fd8504ecd77bd95437e204269aa))
+* **walker:** auto-install walker and elephant ([#10](https://github.com/madsjoh/nyx/issues/10)) ([63ab794](https://github.com/madsjoh/nyx/commit/63ab794475d88c81ae9be8ee7bf4a576b01d180e))
+* **walker:** start elephant via hyprland exec-once ([#14](https://github.com/madsjoh/nyx/issues/14)) ([891bd62](https://github.com/madsjoh/nyx/commit/891bd623c653b044d2b57d290cac08290d34fd0b))
+
+
+### Bug Fixes
+
+* **starship:** improve directory contrast ([#24](https://github.com/madsjoh/nyx/issues/24)) ([c0c79a1](https://github.com/madsjoh/nyx/commit/c0c79a1be0992b6bf563d13dec5328e72c2938af))
+* **starship:** remove prefix keys and left-align prompt ([#20](https://github.com/madsjoh/nyx/issues/20)) ([7c9a556](https://github.com/madsjoh/nyx/commit/7c9a556f4ff15e73bd83f426cfd8239bbe296ce8))
+* **walker:** start elephant via home activation script ([#15](https://github.com/madsjoh/nyx/issues/15)) ([6985ae2](https://github.com/madsjoh/nyx/commit/6985ae264151ad226abab941bdb2f36ff43830fa))
+* **walker:** symlink elephant providers to config ([#16](https://github.com/madsjoh/nyx/issues/16)) ([2d7c62f](https://github.com/madsjoh/nyx/commit/2d7c62fa70371aaf838c332aa0d85f6cb2ace1c9))
+* **walker:** symlink providers and restart on switch ([#17](https://github.com/madsjoh/nyx/issues/17)) ([1097ae2](https://github.com/madsjoh/nyx/commit/1097ae2999a1af03495beba1f6e1aa76379422e8))
+
 ## [0.3.2](https://github.com/madsjoh/nyx/compare/v0.3.1...v0.3.2) (2026-08-05)
 
 
