@@ -74,7 +74,7 @@ success_symbol = "[❯](bold ${colors.color2})"
 error_symbol = "[❯](bold ${colors.color1})"
 
 [directory]
-style = "fg:${colors.color15} bg:${colors.accent}"
+style = "fg:${colors.background} bg:${colors.accent}"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
