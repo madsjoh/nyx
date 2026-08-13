@@ -64,6 +64,7 @@ in
     (lib.mkIf cfg."mako".enable (import ./apps/mako/default.nix integrationArgs))
     (lib.mkIf cfg."obsidian".enable (import ./apps/obsidian/default.nix integrationArgs))
     (lib.mkIf cfg."quickshell".enable (import ./apps/quickshell/default.nix integrationArgs))
+    (lib.mkIf cfg."starship".enable (import ./apps/starship/default.nix integrationArgs))
     (lib.mkIf cfg."swayosd".enable (import ./apps/swayosd/default.nix integrationArgs))
     (lib.mkIf cfg."walker".enable (import ./apps/walker/default.nix integrationArgs))
     (lib.mkIf (cfg."walker".enable && walker != null) (let

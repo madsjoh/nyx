@@ -30,7 +30,7 @@ echo "✓ (rgb #1e1e2e = $RGB)"
 # 4. Verify each integration loads without errors
 echo ""
 echo "--- Integration checks ---"
-for app in alacritty btop chromium foot ghostty gum helix hyprland hyprlock keyboard-rgb kitty mako obsidian quickshell swayosd walker waybar; do
+for app in alacritty btop chromium foot ghostty gum helix hyprland hyprlock keyboard-rgb kitty mako obsidian quickshell starship swayosd walker waybar; do
   COUNT=$(nix eval --impure --expr "
     let
       lib = (import <nixpkgs> {}).lib;
