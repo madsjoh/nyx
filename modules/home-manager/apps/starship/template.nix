@@ -17,6 +17,8 @@ $bun\
 $rust\
 $golang\
 $php\
+$java\
+$maven\
 [](fg:${colors.color0} bg:${colors.background})\
 $time\
 [ ](fg:${colors.background})\
@@ -71,6 +73,16 @@ format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($sty
 
 [php]
 symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[java]
+symbol = ""
+style = "bg:${colors.color0}"
+format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+
+[maven]
+symbol = ""
 style = "bg:${colors.color0}"
 format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
