@@ -4,7 +4,7 @@ add_newline = true
 scan_timeout = 10
 
 format = """
-[░▒▓](#${colors.color15})\
+[░▒▓](${colors.color15})\
 $os\
 [](bg:${colors.accent} fg:${colors.color15})\
 $directory\
