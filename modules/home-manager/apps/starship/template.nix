@@ -22,16 +22,13 @@ style = "${colors.color13}"
 
 [git_status]
 style = "${colors.color3}"
-prefix = " "
 
 [cmd_duration]
 style = "${colors.color8}"
-prefix = " "
 
 [status]
 symbol = "✖"
 style = "bold ${colors.color1}"
-prefix = " "
 
 [time]
 disabled = false
