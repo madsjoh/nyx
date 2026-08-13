@@ -117,7 +117,7 @@ format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($sty
 [conda]
 symbol = ""
 style = "bg:${colors.color0}"
-format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+format = '[[ $symbol $environment ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
 [cpp]
 symbol = ""
@@ -222,7 +222,7 @@ format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($sty
 [meson]
 symbol = "󰔷"
 style = "bg:${colors.color0}"
-format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+format = '[[ $symbol $project ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
 [mojo]
 symbol = "󰈸"
@@ -317,7 +317,7 @@ format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($sty
 [spack]
 symbol = ""
 style = "bg:${colors.color0}"
-format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
+format = '[[ $symbol $environment ](fg:${colors.accent} bg:${colors.color0})]($style)'
 
 [swift]
 symbol = ""
