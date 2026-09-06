@@ -63,8 +63,6 @@ $vlang\
 $xmake\
 $zig\
 [](fg:${colors.color0} bg:${colors.background})\
-$time\
-[ ](fg:${colors.background})\
 \n$character"""
 
 right_format = "$status"
@@ -343,12 +341,6 @@ format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($sty
 symbol = ""
 style = "bg:${colors.color0}"
 format = '[[ $symbol ($version) ](fg:${colors.accent} bg:${colors.color0})]($style)'
-
-[time]
-disabled = false
-time_format = "%R"
-style = "bg:${colors.background}"
-format = '[[  $time ](fg:${colors.color15} bg:${colors.background})]($style)'
 
 [os]
 style = "bg:${colors.color15} fg:${colors.background}"
