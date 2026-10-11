@@ -9,7 +9,7 @@ cd "$(dirname "$(readlink -f "$0")")/.."
 echo "Theme: $THEME  →  $OUTDIR"
 
 count=0
-for app in alacritty btop chromium foot ghostty gum helix hyprland hyprlock keyboard-rgb kitty mako obsidian quickshell shell starship swayosd; do
+for app in alacritty btop chromium foot ghostty gum helix hyprland hyprlock keyboard-rgb kitty mako obsidian shell starship swayosd; do
   # Get list of paths this integration generates
   paths=$(nix eval --impure --raw --expr "
     let

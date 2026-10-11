@@ -1,0 +1,73 @@
+// SPDX-License-Identifier: MIT
+
+import { NyxTheme } from "../theme.slint";
+
+component StepButton {
+    in property <string> text;
+    in property <string> font-family;
+    in property <length> text-size;
+    in property <length> radius;
+
+    width: 56px;
+    height: 36px;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        border-radius: root.radius;
+        background: NyxTheme.background;
+
+        Text {
+            text: root.text;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+
+        TouchArea {
+            clicked => { root.clicked(); }
+        }
+    }
+
+    callback clicked();
+}
+
+export component AudioWindow inherits Window {
+    in property <length> corner-radius: 12px;
+    in property <length> text-size: 13px;
+    in property <string> font-family: "sans-serif";
+    in property <int> volume: 50;
+    in property <bool> muted: false;
+
+    width: 320px;
+    height: 180px;
+    background: NyxTheme.surface;
+
+    VerticalLayout {
+        padding: 16px;
+        spacing: 12px;
+
+        Text {
+            text: root.muted ? "Muted" : "Volume " + root.volume + "%";
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size + 4px;
+        }
+
+        HorizontalLayout {
+            spacing: 8px;
+
+            StepButton { text: "-"; font-family: root.font-family; text-size: root.text-size; radius: root.corner-radius;
+                clicked => { root.set-volume(root.volume - 5); } }
+            StepButton { text: "+"; font-family: root.font-family; text-size: root.text-size; radius: root.corner-radius;
+                clicked => { root.set-volume(root.volume + 5); } }
+            StepButton { text: root.muted ? "Unmute" : "Mute"; font-family: root.font-family; text-size: root.text-size; radius: root.corner-radius;
+                clicked => { root.toggle-mute(); } }
+        }
+    }
+
+    callback set-volume(int);
+    callback toggle-mute();
+}

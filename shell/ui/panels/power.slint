@@ -1,0 +1,69 @@
+// SPDX-License-Identifier: MIT
+
+import { NyxTheme } from "../theme.slint";
+
+component ActionButton {
+    in property <string> text;
+    in property <string> font-family;
+    in property <length> text-size;
+    in property <length> radius;
+
+    height: 40px;
+    width: 100%;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        border-radius: root.radius;
+        background: NyxTheme.background;
+
+        Text {
+            text: root.text;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size;
+        }
+
+        TouchArea {
+            clicked => { root.clicked(); }
+        }
+    }
+
+    callback clicked();
+}
+
+export component PowerWindow inherits Window {
+    in property <length> corner-radius: 12px;
+    in property <length> text-size: 13px;
+    in property <string> font-family: "sans-serif";
+    in property <string> battery: "";
+
+    width: 320px;
+    height: 340px;
+    background: NyxTheme.surface;
+
+    VerticalLayout {
+        padding: 16px;
+        spacing: 8px;
+
+        Text {
+            text: root.battery;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size;
+        }
+
+        ActionButton { text: "Lock"; font-family: root.font-family; text-size: root.text-size; radius: root.corner-radius;
+            clicked => { root.action("lock"); } }
+        ActionButton { text: "Log out"; font-family: root.font-family; text-size: root.text-size; radius: root.corner-radius;
+            clicked => { root.action("logout"); } }
+        ActionButton { text: "Suspend"; font-family: root.font-family; text-size: root.text-size; radius: root.corner-radius;
+            clicked => { root.action("suspend"); } }
+        ActionButton { text: "Reboot"; font-family: root.font-family; text-size: root.text-size; radius: root.corner-radius;
+            clicked => { root.action("reboot"); } }
+        ActionButton { text: "Shut down"; font-family: root.font-family; text-size: root.text-size; radius: root.corner-radius;
+            clicked => { root.action("shutdown"); } }
+    }
+
+    callback action(string);
+}

@@ -7,11 +7,17 @@ use slint::ComponentHandle;
 mod config;
 mod hyprland;
 mod launcher;
+mod panels;
 mod platform;
+mod status;
 mod ui;
 mod wayland;
 
-use ui::{BarWindow, LauncherWindow, NyxTheme};
+use panels::PanelKind;
+use ui::{
+    AudioWindow, BarWindow, ClockWindow, LauncherWindow, NetworkWindow, NyxTheme, PowerWindow,
+    WeatherWindow,
+};
 
 fn apply_theme(bar: &BarWindow, config: &config::Config) {
     let theme = bar.global::<NyxTheme>();
@@ -54,6 +60,10 @@ fn apply_launcher_layout(launcher: &LauncherWindow, config: &config::Config) {
     launcher.set_font_family(config.bar.font_family.clone().into());
 }
 
+fn panel_font(config: &config::Config) -> slint::SharedString {
+    config.bar.font_family.clone().into()
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
     let config = config::Config::load();
@@ -67,8 +77,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     app.add_bar_surface(&qh, config.bar.height.max(1) as u32);
     app.add_overlay_surface(&qh, "nyx-shell-launcher", 640, 420);
+    app.add_overlay_surface(&qh, "nyx-shell-clock", 320, 360);
+    app.add_overlay_surface(&qh, "nyx-shell-weather", 360, 280);
+    app.add_overlay_surface(&qh, "nyx-shell-network", 360, 320);
+    app.add_overlay_surface(&qh, "nyx-shell-audio", 320, 160);
+    app.add_overlay_surface(&qh, "nyx-shell-power", 320, 340);
 
-    // Roundtrip to receive configure sizes.
     event_queue.roundtrip(&mut app)?;
 
     for i in 0..app.surface_count() {
@@ -80,10 +94,34 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let bar = BarWindow::new()?;
     let launcher = LauncherWindow::new()?;
+    let clock = ClockWindow::new()?;
+    let weather = WeatherWindow::new()?;
+    let network = NetworkWindow::new()?;
+    let audio = AudioWindow::new()?;
+    let power = PowerWindow::new()?;
 
     apply_theme(&bar, &config);
     apply_bar_layout(&bar, &config);
     apply_launcher_layout(&launcher, &config);
+
+    let font = panel_font(&config);
+    let panel_radius = config.panel.corner_radius as f32;
+    let panel_text = config.panel.text_size as f32;
+    clock.set_corner_radius(panel_radius);
+    clock.set_text_size(panel_text);
+    clock.set_font_family(font.clone());
+    weather.set_corner_radius(panel_radius);
+    weather.set_text_size(panel_text);
+    weather.set_font_family(font.clone());
+    network.set_corner_radius(panel_radius);
+    network.set_text_size(panel_text);
+    network.set_font_family(font.clone());
+    audio.set_corner_radius(panel_radius);
+    audio.set_text_size(panel_text);
+    audio.set_font_family(font.clone());
+    power.set_corner_radius(panel_radius);
+    power.set_text_size(panel_text);
+    power.set_font_family(font.clone());
 
     for adapter in shared.adapters.borrow().iter() {
         if let Some(id) = *adapter.surface_id.borrow() {
@@ -94,6 +132,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let commands = app.commands();
+
     let show = Rc::clone(&commands);
     bar.on_launch(move || {
         show.borrow_mut().show_launcher = true;
@@ -103,12 +142,53 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         activate.borrow_mut().activate = Some(index as usize);
     });
 
+    let cmd = Rc::clone(&commands);
+    bar.on_open_clock(move || {
+        cmd.borrow_mut().toggle_panel = Some(PanelKind::Clock);
+    });
+    let cmd = Rc::clone(&commands);
+    bar.on_open_weather(move || {
+        cmd.borrow_mut().toggle_panel = Some(PanelKind::Weather);
+    });
+    let cmd = Rc::clone(&commands);
+    bar.on_open_network(move || {
+        cmd.borrow_mut().toggle_panel = Some(PanelKind::Network);
+    });
+    let cmd = Rc::clone(&commands);
+    bar.on_open_audio(move || {
+        cmd.borrow_mut().toggle_panel = Some(PanelKind::Audio);
+    });
+    let cmd = Rc::clone(&commands);
+    bar.on_open_power(move || {
+        cmd.borrow_mut().toggle_panel = Some(PanelKind::Power);
+    });
+
+    let cmd = Rc::clone(&commands);
+    power.on_action(move |action| {
+        cmd.borrow_mut().power_action = Some(action.to_string());
+    });
+    let cmd = Rc::clone(&commands);
+    audio.on_set_volume(move |volume| {
+        cmd.borrow_mut().audio_volume = Some(volume);
+    });
+    let cmd = Rc::clone(&commands);
+    audio.on_toggle_mute(move || {
+        cmd.borrow_mut().audio_toggle_mute = true;
+    });
+    let cmd = Rc::clone(&commands);
+    network.on_connect(move |index| {
+        cmd.borrow_mut().network_connect = Some(index as usize);
+    });
+
     let apps = launcher::load_apps();
     app.set_bar(bar);
-    app.set_launcher(launcher, 1, apps);
+    app.set_launcher(launcher, apps);
+    app.set_panels(clock, weather, network, audio, power);
 
     let workspaces_rx = spawn_workspaces();
     app.set_workspaces_rx(workspaces_rx);
+
+    app.set_status_rx(spawn_status());
 
     app.run(conn, event_queue)?;
     Ok(())
@@ -128,6 +208,19 @@ fn spawn_workspaces() -> Option<std::sync::mpsc::Receiver<String>> {
                 }
             }
             std::thread::sleep(std::time::Duration::from_millis(1000));
+        }
+    });
+    Some(rx)
+}
+
+fn spawn_status() -> Option<std::sync::mpsc::Receiver<status::Status>> {
+    let (tx, rx) = std::sync::mpsc::channel::<status::Status>();
+    std::thread::spawn(move || {
+        let mut poller = status::StatusPoller::new();
+        loop {
+            let snapshot = poller.poll();
+            let _ = tx.send(snapshot);
+            std::thread::sleep(std::time::Duration::from_millis(2000));
         }
     });
     Some(rx)

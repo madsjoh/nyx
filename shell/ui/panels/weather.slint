@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: MIT
+
+import { NyxTheme } from "../theme.slint";
+
+export component WeatherWindow inherits Window {
+    in property <length> corner-radius: 12px;
+    in property <length> text-size: 13px;
+    in property <string> font-family: "sans-serif";
+    in property <string> location: "";
+    in property <string> current: "";
+    in property <[string]> forecast: [];
+
+    width: 360px;
+    height: 280px;
+    background: NyxTheme.surface;
+
+    VerticalLayout {
+        padding: 16px;
+        spacing: 8px;
+
+        Text {
+            text: root.location;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size + 4px;
+        }
+
+        Text {
+            text: root.current;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size + 8px;
+        }
+
+        for item[i] in root.forecast : Text {
+            text: item;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size;
+        }
+    }
+}

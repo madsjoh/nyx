@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: MIT
+
+import { NyxTheme } from "../theme.slint";
+
+export component NetworkWindow inherits Window {
+    in property <length> corner-radius: 12px;
+    in property <length> text-size: 13px;
+    in property <string> font-family: "sans-serif";
+    in property <[string]> networks: [];
+
+    width: 360px;
+    height: 320px;
+    background: NyxTheme.surface;
+
+    VerticalLayout {
+        padding: 16px;
+        spacing: 8px;
+
+        Text {
+            text: "Networks";
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size + 4px;
+        }
+
+        for network[i] in root.networks : Rectangle {
+            height: 36px;
+            width: 100%;
+            border-radius: root.corner-radius;
+            background: NyxTheme.background;
+
+            Text {
+                text: network;
+                color: NyxTheme.foreground;
+                font-family: root.font-family;
+                font-size: root.text-size;
+            }
+
+            TouchArea {
+                clicked => { root.connect(i); }
+            }
+        }
+    }
+
+    callback connect(int);
+}

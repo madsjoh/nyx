@@ -124,5 +124,10 @@ pub fn launch(app: &App) {
 pub struct Commands {
     pub show_launcher: bool,
     pub activate: Option<usize>,
+    pub toggle_panel: Option<crate::panels::PanelKind>,
+    pub power_action: Option<String>,
+    pub audio_volume: Option<i32>,
+    pub audio_toggle_mute: bool,
+    pub network_connect: Option<usize>,
 }
 

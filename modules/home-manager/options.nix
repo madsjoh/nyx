@@ -4,7 +4,7 @@ let
   themeNames = builtins.attrNames themes;
   appNames = [
     "alacritty" "btop" "chromium" "foot" "ghostty" "gum" "helix" "hyprland"
-    "hyprlock" "keyboard-rgb" "kitty" "mako" "obsidian" "quickshell" "shell"
+    "hyprlock" "keyboard-rgb" "kitty" "mako" "obsidian" "shell"
     "starship" "swayosd"
   ];
   mkAppOption = name: {

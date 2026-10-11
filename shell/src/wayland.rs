@@ -17,7 +17,7 @@ use smithay_client_toolkit::seat::pointer::{PointerEvent, PointerEventKind, Poin
 use smithay_client_toolkit::seat::{Capability, SeatHandler, SeatState};
 use smithay_client_toolkit::shell::wlr_layer::{
     Anchor, KeyboardInteractivity, Layer, LayerShell, LayerShellHandler, LayerSurface,
-    LayerSurfaceConfigure, SurfaceKind,
+    LayerSurfaceConfigure,
 };
 use smithay_client_toolkit::shell::WaylandSurface;
 use smithay_client_toolkit::shm::slot::SlotPool;
@@ -29,8 +29,40 @@ use slint::platform::software_renderer::PremultipliedRgbaColor;
 use slint::{ModelRc, SharedString};
 
 use crate::launcher::{self, Commands};
+use crate::panels::{self, PanelKind};
 use crate::platform::{LayerWindowAdapter, SharedState};
-use crate::ui::{BarWindow, LauncherWindow};
+use crate::ui::{
+    AudioWindow, BarWindow, ClockWindow, LauncherWindow, NetworkWindow, PowerWindow, WeatherWindow,
+};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Overlay {
+    Launcher,
+    Panel(PanelKind),
+}
+
+impl Overlay {
+    fn surface(self) -> usize {
+        match self {
+            Overlay::Launcher => 1,
+            Overlay::Panel(kind) => match kind {
+                PanelKind::Clock => 2,
+                PanelKind::Weather => 3,
+                PanelKind::Network => 4,
+                PanelKind::Audio => 5,
+                PanelKind::Power => 6,
+            },
+        }
+    }
+}
+
+fn model_of_strings(strings: &[String]) -> ModelRc<SharedString> {
+    let shared: Vec<SharedString> = strings
+        .iter()
+        .map(|s| SharedString::from(s.as_str()))
+        .collect();
+    ModelRc::from(shared.as_slice())
+}
 
 struct Surface {
     layer: LayerSurface,
@@ -54,15 +86,23 @@ pub struct App {
     last_clock: String,
     exit: bool,
 
-    launcher: Option<LauncherWindow>,
-    launcher_surface: usize,
+    overlay: Option<Overlay>,
+    mapped_overlay: Option<Overlay>,
     apps: Vec<launcher::App>,
     launcher_query: String,
     launcher_selected: usize,
-    launcher_visible: bool,
-    launcher_mapped: bool,
+
+    launcher: Option<LauncherWindow>,
+    clock: Option<ClockWindow>,
+    weather: Option<WeatherWindow>,
+    network: Option<NetworkWindow>,
+    audio: Option<AudioWindow>,
+    power: Option<PowerWindow>,
+    networks: Vec<(String, i32)>,
+
     commands: Rc<RefCell<Commands>>,
     workspaces_rx: Option<std::sync::mpsc::Receiver<String>>,
+    status_rx: Option<std::sync::mpsc::Receiver<crate::status::Status>>,
 
     keyboard: Option<wl_keyboard::WlKeyboard>,
     pointer: Option<wl_pointer::WlPointer>,
@@ -90,15 +130,21 @@ impl App {
             bar: None,
             last_clock: String::new(),
             exit: false,
-            launcher: None,
-            launcher_surface: 0,
+            overlay: None,
+            mapped_overlay: None,
             apps: Vec::new(),
             launcher_query: String::new(),
             launcher_selected: 0,
-            launcher_visible: false,
-            launcher_mapped: false,
+            launcher: None,
+            clock: None,
+            weather: None,
+            network: None,
+            audio: None,
+            power: None,
+            networks: Vec::new(),
             commands: Rc::new(RefCell::new(Commands::default())),
             workspaces_rx: None,
+            status_rx: None,
             keyboard: None,
             pointer: None,
         })
@@ -241,10 +287,24 @@ impl App {
         self.bar = Some(bar);
     }
 
-    pub fn set_launcher(&mut self, launcher: LauncherWindow, surface: usize, apps: Vec<launcher::App>) {
+    pub fn set_launcher(&mut self, launcher: LauncherWindow, apps: Vec<launcher::App>) {
         self.launcher = Some(launcher);
-        self.launcher_surface = surface;
         self.apps = apps;
+    }
+
+    pub fn set_panels(
+        &mut self,
+        clock: ClockWindow,
+        weather: WeatherWindow,
+        network: NetworkWindow,
+        audio: AudioWindow,
+        power: PowerWindow,
+    ) {
+        self.clock = Some(clock);
+        self.weather = Some(weather);
+        self.network = Some(network);
+        self.audio = Some(audio);
+        self.power = Some(power);
     }
 
     pub fn commands(&self) -> Rc<RefCell<Commands>> {
@@ -253,6 +313,10 @@ impl App {
 
     pub fn set_workspaces_rx(&mut self, rx: Option<std::sync::mpsc::Receiver<String>>) {
         self.workspaces_rx = rx;
+    }
+
+    pub fn set_status_rx(&mut self, rx: Option<std::sync::mpsc::Receiver<crate::status::Status>>) {
+        self.status_rx = rx;
     }
 
     fn map_surface(&mut self, id: usize) {
@@ -269,17 +333,92 @@ impl App {
         }
     }
 
-    fn show_launcher(&mut self) {
-        self.launcher_query.clear();
-        self.launcher_selected = 0;
-        self.launcher_visible = true;
-        self.map_surface(self.launcher_surface);
-        self.update_launcher_results();
+    fn open_overlay(&mut self, overlay: Overlay) {
+        self.overlay = Some(overlay);
     }
 
-    fn hide_launcher(&mut self) {
-        self.launcher_visible = false;
-        self.unmap_surface(self.launcher_surface);
+    fn close_overlay(&mut self) {
+        self.overlay = None;
+    }
+
+    fn toggle_launcher(&mut self) {
+        if self.overlay == Some(Overlay::Launcher) {
+            self.close_overlay();
+        } else {
+            self.open_overlay(Overlay::Launcher);
+        }
+    }
+
+    fn toggle_panel(&mut self, kind: PanelKind) {
+        if self.overlay == Some(Overlay::Panel(kind)) {
+            self.close_overlay();
+        } else {
+            self.open_overlay(Overlay::Panel(kind));
+        }
+    }
+
+    fn populate(&mut self, overlay: Overlay) {
+        match overlay {
+            Overlay::Launcher => {
+                self.launcher_query.clear();
+                self.launcher_selected = 0;
+                self.update_launcher_results();
+            }
+            Overlay::Panel(PanelKind::Clock) => {
+                let (title, weekdays, days) = panels::calendar();
+                if let Some(clock) = &self.clock {
+                    clock.set_heading(SharedString::from(title.as_str()));
+                    clock.set_weekdays(model_of_strings(&weekdays));
+                    clock.set_days(model_of_strings(&days));
+                }
+            }
+            Overlay::Panel(PanelKind::Weather) => {
+                let (location, current, forecast) = panels::weather();
+                if let Some(weather) = &self.weather {
+                    weather.set_location(SharedString::from(location.as_str()));
+                    weather.set_current(SharedString::from(current.as_str()));
+                    weather.set_forecast(model_of_strings(&forecast));
+                }
+            }
+            Overlay::Panel(PanelKind::Network) => {
+                self.networks = panels::networks();
+                if let Some(network) = &self.network {
+                    let names: Vec<String> = self
+                        .networks
+                        .iter()
+                        .map(|(ssid, signal)| format!("{ssid} ({signal}%)"))
+                        .collect();
+                    network.set_networks(model_of_strings(&names));
+                }
+            }
+            Overlay::Panel(PanelKind::Audio) => {
+                let (volume, muted) = panels::audio_state();
+                if let Some(audio) = &self.audio {
+                    audio.set_volume(volume);
+                    audio.set_muted(muted);
+                }
+            }
+            Overlay::Panel(PanelKind::Power) => {
+                let battery = panels::battery_info();
+                if let Some(power) = &self.power {
+                    power.set_battery(SharedString::from(battery.as_str()));
+                }
+            }
+        }
+    }
+
+    fn reconcile_overlay(&mut self) {
+        if self.overlay == self.mapped_overlay {
+            return;
+        }
+        if let Some(prev) = self.mapped_overlay {
+            self.unmap_surface(prev.surface());
+        }
+        if let Some(next) = self.overlay {
+            self.populate(next);
+            self.map_surface(next.surface());
+        }
+        self.mapped_overlay = self.overlay;
     }
 
     fn activate_launcher(&mut self) {
@@ -287,7 +426,7 @@ impl App {
         if let Some(app) = apps.get(self.launcher_selected).copied() {
             launcher::launch(app);
         }
-        self.hide_launcher();
+        self.close_overlay();
     }
 
     fn update_launcher_results(&mut self) {
@@ -306,7 +445,7 @@ impl App {
 
     fn handle_launcher_key(&mut self, event: KeyEvent) {
         match event.keysym {
-            Keysym::Escape => self.hide_launcher(),
+            Keysym::Escape => self.close_overlay(),
             Keysym::Return | Keysym::KP_Enter => self.activate_launcher(),
             Keysym::Up => {
                 self.launcher_selected = self.launcher_selected.saturating_sub(1);
@@ -333,13 +472,9 @@ impl App {
         }
     }
 
-    fn refresh_launcher_visibility(&mut self) {
-        if self.launcher_visible && !self.launcher_mapped {
-            self.launcher_mapped = true;
-            self.map_surface(self.launcher_surface);
-        } else if !self.launcher_visible && self.launcher_mapped {
-            self.launcher_mapped = false;
-            self.unmap_surface(self.launcher_surface);
+    fn handle_panel_key(&mut self, event: KeyEvent) {
+        if event.keysym == Keysym::Escape {
+            self.close_overlay();
         }
     }
 
@@ -360,16 +495,54 @@ impl App {
             }
         }
 
+        if let Some(rx) = &self.status_rx {
+            while let Ok(s) = rx.try_recv() {
+                if let Some(bar) = &self.bar {
+                    bar.set_status_cpu(s.cpu.clone().into());
+                    bar.set_status_battery(s.battery.clone().into());
+                    bar.set_status_network(s.network.clone().into());
+                    bar.set_status_bluetooth(s.bluetooth.clone().into());
+                    bar.set_status_audio(s.audio.clone().into());
+                    bar.set_status_weather(s.weather.clone().into());
+                }
+            }
+        }
+
         let commands = std::mem::replace(&mut *self.commands.borrow_mut(), Commands::default());
         if commands.show_launcher {
-            self.show_launcher();
+            self.toggle_launcher();
+        }
+        if let Some(kind) = commands.toggle_panel {
+            self.toggle_panel(kind);
         }
         if let Some(index) = commands.activate {
             self.launcher_selected = index;
             self.activate_launcher();
         }
+        if let Some(action) = commands.power_action {
+            panels::run_power_action(&action);
+        }
+        if let Some(volume) = commands.audio_volume {
+            panels::set_volume(volume);
+            if let Some(audio) = &self.audio {
+                audio.set_volume(volume);
+            }
+        }
+        if commands.audio_toggle_mute {
+            panels::toggle_mute();
+            let (volume, muted) = panels::audio_state();
+            if let Some(audio) = &self.audio {
+                audio.set_volume(volume);
+                audio.set_muted(muted);
+            }
+        }
+        if let Some(index) = commands.network_connect {
+            if let Some((ssid, _)) = self.networks.get(index) {
+                panels::connect_wifi(ssid);
+            }
+        }
 
-        self.refresh_launcher_visibility();
+        self.reconcile_overlay();
         self.render_dirty();
     }
 
@@ -464,12 +637,8 @@ impl LayerShellHandler for App {
         _qh: &QueueHandle<Self>,
         layer: &LayerSurface,
         configure: LayerSurfaceConfigure,
-        serial: u32,
+        _serial: u32,
     ) {
-        if let SurfaceKind::Wlr(wlr) = layer.kind() {
-            wlr.ack_configure(serial);
-        }
-
         for surface in &mut self.surfaces {
             if &surface.layer == layer {
                 surface.width =
@@ -556,8 +725,10 @@ impl KeyboardHandler for App {
         _serial: u32,
         event: KeyEvent,
     ) {
-        if self.launcher_visible {
+        if matches!(self.overlay, Some(Overlay::Launcher)) {
             self.handle_launcher_key(event);
+        } else if self.overlay.is_some() {
+            self.handle_panel_key(event);
         }
     }
 

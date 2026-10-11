@@ -36,7 +36,7 @@ All apps are enabled by default. Disable any you don't want themed with `nyx.<ap
 
 ## Supported applications
 
-alacritty, btop, chromium, foot, ghostty, gum, helix, hyprland, hyprlock, keyboard-rgb, kitty, mako, obsidian, quickshell, shell, starship, swayosd
+alacritty, btop, chromium, foot, ghostty, gum, helix, hyprland, hyprlock, keyboard-rgb, kitty, mako, obsidian, shell, starship, swayosd
 
 ## Themes
 

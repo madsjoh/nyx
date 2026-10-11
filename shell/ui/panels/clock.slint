@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: MIT
+
+import { NyxTheme } from "../theme.slint";
+
+export component ClockWindow inherits Window {
+    in property <length> corner-radius: 12px;
+    in property <length> text-size: 13px;
+    in property <string> font-family: "sans-serif";
+    in property <string> heading: "";
+    in property <[string]> weekdays: [];
+    in property <[string]> days: [];
+
+    width: 320px;
+    height: 360px;
+    background: NyxTheme.surface;
+
+    Text {
+        x: 16px;
+        y: 16px;
+        text: root.heading;
+        color: NyxTheme.foreground;
+        font-family: root.font-family;
+        font-size: root.text-size + 4px;
+    }
+
+    for wd[i] in root.weekdays : Text {
+        x: 16px + i * 41px;
+        y: 52px;
+        width: 41px;
+        text: wd;
+        color: NyxTheme.foreground;
+        font-family: root.font-family;
+        font-size: root.text-size - 2px;
+        horizontal-alignment: center;
+    }
+
+    for day[i] in root.days : Rectangle {
+        x: 16px + Math.mod(i, 7) * 41px;
+        y: 76px + (i / 7) * 40px;
+        width: 41px;
+        height: 40px;
+        border-radius: root.corner-radius;
+        background: transparent;
+
+        Text {
+            text: day;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+    }
+}

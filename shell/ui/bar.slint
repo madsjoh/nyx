@@ -1,7 +1,28 @@
-// Copyright © SixtyFPS GmbH <info@slint.dev>
 // SPDX-License-Identifier: MIT
 
 import { NyxTheme } from "theme.slint";
+
+component StatusText {
+    in property <string> text;
+    in property <string> font-family;
+    in property <length> text-size;
+
+    width: t.width;
+    height: 100%;
+
+    t := Text {
+        text: root.text;
+        color: NyxTheme.foreground;
+        font-family: root.font-family;
+        font-size: root.text-size;
+    }
+
+    TouchArea {
+        clicked => { root.clicked(); }
+    }
+
+    callback clicked();
+}
 
 export component BarWindow inherits Window {
     in property <length> corner-radius: 0px;
@@ -11,6 +32,12 @@ export component BarWindow inherits Window {
     in property <string> logo: "";
     in property <string> workspaces: "1 2 3 4 5";
     in property <string> clock: "--:--";
+    in property <string> status-weather: "";
+    in property <string> status-audio: "";
+    in property <string> status-network: "";
+    in property <string> status-bluetooth: "";
+    in property <string> status-battery: "";
+    in property <string> status-cpu: "";
 
     height: 26px;
     background: NyxTheme.background;
@@ -50,13 +77,60 @@ export component BarWindow inherits Window {
             background: transparent;
         }
 
-        Text {
-            text: root.clock;
-            color: NyxTheme.foreground;
+        StatusText {
+            text: root.status-weather;
             font-family: root.font-family;
-            font-size: root.text-size;
+            text-size: root.text-size;
+            clicked => { root.open-weather(); }
+        }
+
+        StatusText {
+            text: root.clock;
+            font-family: root.font-family;
+            text-size: root.text-size;
+            clicked => { root.open-clock(); }
+        }
+
+        StatusText {
+            text: root.status-audio;
+            font-family: root.font-family;
+            text-size: root.text-size;
+            clicked => { root.open-audio(); }
+        }
+
+        StatusText {
+            text: root.status-network;
+            font-family: root.font-family;
+            text-size: root.text-size;
+            clicked => { root.open-network(); }
+        }
+
+        StatusText {
+            text: root.status-bluetooth;
+            font-family: root.font-family;
+            text-size: root.text-size;
+            clicked => { root.open-network(); }
+        }
+
+        StatusText {
+            text: root.status-battery;
+            font-family: root.font-family;
+            text-size: root.text-size;
+            clicked => { root.open-power(); }
+        }
+
+        StatusText {
+            text: root.status-cpu;
+            font-family: root.font-family;
+            text-size: root.text-size;
+            clicked => { root.open-power(); }
         }
     }
 
     callback launch();
+    callback open-weather();
+    callback open-clock();
+    callback open-audio();
+    callback open-network();
+    callback open-power();
 }
