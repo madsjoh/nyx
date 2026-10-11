@@ -60,7 +60,6 @@ in
     "hypr/nyx/apps/telegram.lua".text = rf "apps/telegram.lua";
     "hypr/nyx/apps/terminals.lua".text = rf "apps/terminals.lua";
     "hypr/nyx/apps/typora.lua".text = rf "apps/typora.lua";
-    "hypr/nyx/apps/walker.lua".text = rf "apps/walker.lua";
     "hypr/nyx/apps/webcam-overlay.lua".text = rf "apps/webcam-overlay.lua";
 
     "hypr/monitors.lua".text = rf "config-monitors.lua";

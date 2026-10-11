@@ -1,0 +1,93 @@
+// Copyright © SixtyFPS GmbH <info@slint.dev>
+// SPDX-License-Identifier: MIT
+
+import { MaterialPalette, MaterialScheme, MaterialSchemes } from "@material";
+
+// Central Nyx color palette injected from the generated shell.json at runtime.
+export global NyxTheme {
+    in property <color> accent: #7aa2f7;
+    in property <color> background: #1a1b26;
+    in property <color> foreground: #a9b1d6;
+    in property <color> surface: #1a1b26;
+    in property <color> cursor: #c0caf5;
+
+    in property <color> color0: #32344a;
+    in property <color> color1: #f7768e;
+    in property <color> color2: #9ece6a;
+    in property <color> color3: #e0af68;
+    in property <color> color4: #7aa2f7;
+    in property <color> color5: #ad8ee6;
+    in property <color> color6: #449dab;
+    in property <color> color7: #787c99;
+    in property <color> color8: #444b6a;
+    in property <color> color9: #ff7a93;
+    in property <color> color10: #b9f27c;
+    in property <color> color11: #ff9e64;
+    in property <color> color12: #7da6ff;
+    in property <color> color13: #bb9af7;
+    in property <color> color14: #0db9d7;
+    in property <color> color15: #acb0d0;
+
+    in property <color> urgent: #f7768e;
+
+    pure function scheme() -> MaterialScheme {
+        return {
+            primary: root.accent,
+            surfaceTint: root.accent,
+            onPrimary: root.background,
+            primaryContainer: root.accent.with_alpha(20%),
+            onPrimaryContainer: root.foreground,
+            secondary: root.foreground.darker(0.15),
+            onSecondary: root.background,
+            secondaryContainer: root.background.mix(root.foreground, 15%),
+            onSecondaryContainer: root.foreground,
+            tertiary: root.color5,
+            onTertiary: root.background,
+            tertiaryContainer: root.color5.with_alpha(20%),
+            onTertiaryContainer: root.foreground,
+            error: root.color1,
+            onError: root.background,
+            errorContainer: root.color1.with_alpha(25%),
+            onErrorContainer: root.foreground,
+            background: root.background,
+            onBackground: root.foreground,
+            surface: root.background,
+            onSurface: root.foreground,
+            surfaceVariant: root.background.mix(root.foreground, 10%),
+            onSurfaceVariant: root.foreground,
+            outline: root.foreground.with_alpha(35%),
+            outlineVariant: root.foreground.with_alpha(15%),
+            shadow: #000000,
+            scrim: #000000,
+            inverseSurface: root.foreground,
+            inverseOnSurface: root.background,
+            inversePrimary: root.accent,
+            primaryFixed: root.accent.with_alpha(20%),
+            onPrimaryFixed: root.foreground,
+            primaryFixedDim: root.accent.with_alpha(12%),
+            onPrimaryFixedVariant: root.foreground,
+            secondaryFixed: root.background.mix(root.foreground, 15%),
+            onSecondaryFixed: root.foreground,
+            secondaryFixedDim: root.background.mix(root.foreground, 8%),
+            onSecondaryFixedVariant: root.foreground,
+            tertiaryFixed: root.color5.with_alpha(20%),
+            onTertiaryFixed: root.foreground,
+            tertiaryFixedDim: root.color5.with_alpha(12%),
+            onTertiaryFixedVariant: root.foreground,
+            surfaceDim: root.background.darker(0.15),
+            surfaceBright: root.background.brighter(0.2),
+            surfaceContainerLowest: root.background.darker(0.1),
+            surfaceContainerLow: root.background.mix(root.foreground, 4%),
+            surfaceContainer: root.background.mix(root.foreground, 7%),
+            surfaceContainerHigh: root.background.mix(root.foreground, 12%),
+            surfaceContainerHighest: root.background.mix(root.foreground, 16%),
+        };
+    }
+
+    public function apply() {
+        MaterialPalette.schemes = {
+            light: root.scheme(),
+            dark: root.scheme(),
+        };
+    }
+}

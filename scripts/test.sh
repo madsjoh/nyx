@@ -30,7 +30,7 @@ echo "✓ (rgb #1e1e2e = $RGB)"
 # 4. Verify each integration loads without errors
 echo ""
 echo "--- Integration checks ---"
-for app in alacritty btop chromium foot ghostty gum helix hyprland hyprlock keyboard-rgb kitty mako obsidian quickshell starship swayosd walker waybar; do
+for app in alacritty btop chromium foot ghostty gum helix hyprland hyprlock keyboard-rgb kitty mako obsidian quickshell shell starship swayosd; do
   COUNT=$(nix eval --impure --expr "
     let
       lib = (import <nixpkgs> {}).lib;
@@ -102,14 +102,14 @@ CFG=$(nix eval --impure --raw --expr "
     themes = import ./themes;
     theme = themes.\"$THEME\";
     helpers = (import ./modules/home-manager/lib.nix { inherit lib; });
-    mod = import ./modules/home-manager/apps/waybar/default.nix { inherit theme helpers; };
-  in mod.xdg.configFile.\"waybar/config.jsonc\".text
+    mod = import ./modules/home-manager/apps/shell/default.nix { inherit theme helpers; };
+  in mod.xdg.configFile.\"nyx/shell.json\".text
 " 2>&1)
 
-if echo "$CFG" | grep -q "modules-left"; then
-  echo "✓ waybar config.jsonc has modules-left"
+if echo "$CFG" | grep -q "\"bar\"" && echo "$CFG" | grep -q "\"background\""; then
+  echo "✓ shell.json has bar layout and theme colors"
 else
-  echo "✗ waybar config incomplete"
+  echo "✗ shell config incomplete"
 fi
 
 echo ""

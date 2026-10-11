@@ -1,4 +1,4 @@
-{ walker ? null }:
+{ }:
 
 { config, lib, pkgs, ... }:
 
@@ -64,43 +64,15 @@ in
     (lib.mkIf cfg."mako".enable (import ./apps/mako/default.nix integrationArgs))
     (lib.mkIf cfg."obsidian".enable (import ./apps/obsidian/default.nix integrationArgs))
     (lib.mkIf cfg."quickshell".enable (import ./apps/quickshell/default.nix integrationArgs))
+    (lib.mkIf cfg."shell".enable (import ./apps/shell/default.nix {
+      inherit theme helpers;
+      options = cfg.shell;
+    }))
+    (lib.mkIf cfg."shell".enable {
+      home.packages = [ (pkgs.callPackage ../../shell { }) ];
+    })
     (lib.mkIf cfg."starship".enable (import ./apps/starship/default.nix integrationArgs))
     (lib.mkIf cfg."swayosd".enable (import ./apps/swayosd/default.nix integrationArgs))
-    (lib.mkIf cfg."walker".enable (import ./apps/walker/default.nix integrationArgs))
-    (lib.mkIf (cfg."walker".enable && walker != null) (let
-      walkerPackage = walker.packages.${pkgs.stdenv.system}.walker;
-      elephantPackage = walker.inputs.elephant.packages.${pkgs.stdenv.system}.default;
-    in {
-      home.packages = [ walkerPackage elephantPackage ];
-      systemd.user.services.elephant = {
-        Unit = {
-          Description = "Elephant launcher backend";
-          After = [ "graphical-session.target" ];
-          PartOf = [ "graphical-session.target" ];
-          ConditionEnvironment = "WAYLAND_DISPLAY";
-        };
-        Service = {
-          Type = "simple";
-          ExecStart = "${elephantPackage}/bin/elephant";
-          Restart = "on-failure";
-          RestartSec = 1;
-          ExecStopPost = "${pkgs.coreutils}/bin/rm -f %t/elephant.sock";
-        };
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
-      };
-      home.activation.linkElephantProviders = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        mkdir -p $HOME/.config/elephant/providers
-        for so in ${elephantPackage}/lib/elephant/providers/*.so; do
-          ln -sfn "$so" "$HOME/.config/elephant/providers/$(basename "$so")"
-        done
-      '';
-      home.activation.startElephant = lib.hm.dag.entryAfter [ "reloadSystemd" ] ''
-        $DRY_RUN_CMD systemctl --user restart elephant 2>/dev/null || true
-      '';
-    }))
-    (lib.mkIf cfg."waybar".enable (import ./apps/waybar/default.nix integrationArgs))
 
     (lib.mkIf cfg."hyprland".enable {
       wayland.windowManager.hyprland.enable = lib.mkForce false;

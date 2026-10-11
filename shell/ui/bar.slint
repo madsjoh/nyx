@@ -1,0 +1,62 @@
+// Copyright © SixtyFPS GmbH <info@slint.dev>
+// SPDX-License-Identifier: MIT
+
+import { NyxTheme } from "theme.slint";
+
+export component BarWindow inherits Window {
+    in property <length> corner-radius: 0px;
+    in property <length> spacing: 8px;
+    in property <length> text-size: 12px;
+    in property <string> font-family: "sans-serif";
+    in property <string> logo: "";
+    in property <string> workspaces: "1 2 3 4 5";
+    in property <string> clock: "--:--";
+
+    height: 26px;
+    background: NyxTheme.background;
+
+    HorizontalLayout {
+        padding-left: root.spacing;
+        padding-right: root.spacing;
+        spacing: root.spacing;
+
+        Rectangle {
+            width: 26px;
+            height: 100%;
+            border-radius: root.corner-radius;
+            background: transparent;
+
+            Text {
+                text: root.logo;
+                color: NyxTheme.foreground;
+                font-family: root.font-family;
+                font-size: root.text-size;
+            }
+
+            TouchArea {
+                clicked => { root.launch(); }
+            }
+        }
+
+        Text {
+            text: root.workspaces;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size;
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            background: transparent;
+        }
+
+        Text {
+            text: root.clock;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size;
+        }
+    }
+
+    callback launch();
+}

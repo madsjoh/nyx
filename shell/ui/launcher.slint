@@ -1,0 +1,59 @@
+// Copyright © SixtyFPS GmbH <info@slint.dev>
+// SPDX-License-Identifier: MIT
+
+import { NyxTheme } from "theme.slint";
+
+export component LauncherWindow inherits Window {
+    in property <length> corner-radius: 12px;
+    in property <length> text-size: 16px;
+    in property <string> font-family: "sans-serif";
+    in property <string> query: "";
+    in property <int> selected: 0;
+    in property <[string]> results: [];
+
+    width: 640px;
+    height: 420px;
+    background: NyxTheme.surface;
+
+    Rectangle {
+        x: 16px;
+        y: 16px;
+        width: parent.width - 32px;
+        height: 36px;
+        border-radius: root.corner-radius;
+        background: NyxTheme.background;
+
+        Text {
+            x: 12px;
+            y: 8px;
+            text: root.query;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size;
+        }
+    }
+
+    for result[i] in root.results : Rectangle {
+        x: 16px;
+        y: 64px + i * 40px;
+        width: parent.width - 32px;
+        height: 36px;
+        border-radius: root.corner-radius;
+        background: i == root.selected ? NyxTheme.accent.with_alpha(25%) : transparent;
+
+        Text {
+            x: 12px;
+            y: 8px;
+            text: result;
+            color: NyxTheme.foreground;
+            font-family: root.font-family;
+            font-size: root.text-size;
+        }
+
+        TouchArea {
+            clicked => { root.activate(i); }
+        }
+    }
+
+    callback activate(int);
+}

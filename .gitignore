@@ -21,3 +21,6 @@ docs/superpowers
 
 # CI checkout
 omarchy
+
+# Rust
+shell/target/

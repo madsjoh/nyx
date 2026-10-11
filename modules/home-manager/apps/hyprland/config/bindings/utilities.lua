@@ -1,10 +1,9 @@
-o.bind("SUPER + SPACE", "Launch apps", { launch = "walker" })
-o.bind("SUPER + CTRL + E", "Emoji picker", { launch = "walker -m symbols" })
+o.bind("SUPER + SPACE", "Launch apps", { launch = "nyx-shell --launcher" })
 o.bind("SUPER + ESCAPE", "System menu", { launch = "wlogout" })
 
 o.bind("XF86Calculator", "Calculator", "gnome-calculator")
 
-o.bind("SUPER + SHIFT + SPACE", "Toggle top bar", "pkill -USR1 waybar")
+o.bind("SUPER + SHIFT + SPACE", "Toggle top bar", "pkill -USR1 nyx-shell")
 
 o.bind("SUPER + COMMA", "Dismiss last notification", "makoctl dismiss")
 o.bind("SUPER + SHIFT + COMMA", "Dismiss all notifications", "makoctl dismiss --all")
