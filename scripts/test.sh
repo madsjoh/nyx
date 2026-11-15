@@ -31,13 +31,16 @@ echo "✓ (rgb #1e1e2e = $RGB)"
 echo ""
 echo "--- Integration checks ---"
 for app in alacritty btop chromium foot ghostty gum helix hyprland hyprlock keyboard-rgb kitty mako obsidian quickshell starship swayosd walker waybar; do
+  ARGS="{ inherit theme helpers; }"
+  [ "$app" = "hyprland" ] && ARGS="{ inherit theme helpers keyboard; }"
   COUNT=$(nix eval --impure --expr "
     let
       lib = (import <nixpkgs> {}).lib;
       themes = import ./themes;
       theme = themes.\"$THEME\";
       helpers = (import ./modules/home-manager/lib.nix { inherit lib; });
-      mod = import (./modules/home-manager/apps + \"/$app/default.nix\") { inherit theme helpers; };
+      keyboard = { layout = \"us\"; variant = \"\"; model = \"\"; options = \"compose:caps\"; rules = \"\"; };
+      mod = import (./modules/home-manager/apps + \"/$app/default.nix\") $ARGS;
     in builtins.length (builtins.attrNames (mod.xdg.configFile or {}))
   " 2>&1)
   echo "  $app: $COUNT files"
@@ -54,7 +57,8 @@ CFG=$(nix eval --impure --raw --expr "
     themes = import ./themes;
     theme = themes.\"$THEME\";
     helpers = (import ./modules/home-manager/lib.nix { inherit lib; });
-    mod = import ./modules/home-manager/apps/hyprland/default.nix { inherit theme helpers; };
+    keyboard = { layout = \"us\"; variant = \"\"; model = \"\"; options = \"compose:caps\"; rules = \"\"; };
+    mod = import ./modules/home-manager/apps/hyprland/default.nix { inherit theme helpers keyboard; };
   in mod.xdg.configFile.\"hypr/hyprland.lua\".text
 " 2>&1)
 
@@ -110,6 +114,23 @@ if echo "$CFG" | grep -q "modules-left"; then
   echo "✓ waybar config.jsonc has modules-left"
 else
   echo "✗ waybar config incomplete"
+fi
+
+CFG=$(nix eval --impure --raw --expr "
+  let
+    lib = (import <nixpkgs> {}).lib;
+    themes = import ./themes;
+    theme = themes.\"$THEME\";
+    helpers = (import ./modules/home-manager/lib.nix { inherit lib; });
+    keyboard = { layout = \"de\"; variant = \"nodeadkeys\"; model = \"\"; options = \"compose:caps\"; rules = \"\"; };
+    mod = import ./modules/home-manager/apps/hyprland/default.nix { inherit theme helpers keyboard; };
+  in mod.xdg.configFile.\"hypr/nyx/keyboard.lua\".text
+" 2>&1)
+
+if echo "$CFG" | grep -q 'kb_layout = "de"'; then
+  echo "✓ hyprland keyboard layout is configurable"
+else
+  echo "✗ hyprland keyboard layout not configurable"
 fi
 
 echo ""

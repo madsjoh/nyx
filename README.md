@@ -59,6 +59,11 @@ catppuccin · catppuccin-latte · ethereal · everforest · flexoki-light · gru
 |---|---|---|---|
 | `nyx.enable` | bool | `false` | Enable Nyx theming |
 | `nyx.theme` | enum | `"tokyo-night"` | Active theme |
+| `nyx.keyboard.layout` | string | `"us"` | XKB keyboard layout |
+| `nyx.keyboard.variant` | string | `""` | XKB keyboard variant |
+| `nyx.keyboard.model` | string | `""` | XKB keyboard model |
+| `nyx.keyboard.options` | string | `"compose:caps"` | XKB keyboard options |
+| `nyx.keyboard.rules` | string | `""` | XKB keyboard rules |
 | `nyx.<app>.enable` | bool | `true` | Toggle theming per app |
 
 ## Development
