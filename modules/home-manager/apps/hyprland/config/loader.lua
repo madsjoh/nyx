@@ -7,6 +7,7 @@ require("hypr.nyx.autostart")
 require("hypr.nyx.bindings")
 require("hypr.nyx.envs")
 require("hypr.nyx.looknfeel")
+require("hypr.nyx.keyboard")
 require("hypr.nyx.input")
 require("hypr.nyx.windows")
 

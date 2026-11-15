@@ -1,4 +1,4 @@
-{ theme, helpers }:
+{ theme, helpers, keyboard }:
 
 let
   hyprDir = ./config;
@@ -26,6 +26,18 @@ in
     "hypr/nyx/envs.lua".text = rf "envs.lua";
     "hypr/nyx/looknfeel.lua".text = rf "looknfeel.lua";
     "hypr/nyx/input.lua".text = rf "input.lua";
+    "hypr/nyx/keyboard.lua".text = ''
+      -- Keyboard layout and XKB options, configured via nyx.keyboard.
+      hl.config({
+        input = {
+          kb_layout = "${keyboard.layout}",
+          kb_variant = "${keyboard.variant}",
+          kb_model = "${keyboard.model}",
+          kb_options = "${keyboard.options}",
+          kb_rules = "${keyboard.rules}",
+        },
+      })
+    '';
     "hypr/nyx/autostart.lua".text = rf "autostart.lua";
     "hypr/nyx/windows.lua".text = rf "windows.lua";
     "hypr/nyx/apps.lua".text = rf "apps.lua";
