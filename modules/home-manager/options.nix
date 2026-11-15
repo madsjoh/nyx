@@ -17,6 +17,14 @@ let
 in
 {
   options.nyx = {
+    autostart = {
+      hideRedundantApplets = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Hide redundant tray applets such as nm-applet, blueman, and fcitx5";
+      };
+    };
+
     enable = lib.mkEnableOption "Nyx theme module";
 
     keyboard = {
