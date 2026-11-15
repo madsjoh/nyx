@@ -7,6 +7,10 @@ let
   themes = import ../../themes;
   theme = themes.${cfg.theme} or (throw "Unknown nyx theme: ${cfg.theme}");
   helpers = import ./lib.nix { inherit lib; };
+  hiddenAutostartEntry = ''
+    [Desktop Entry]
+    Hidden=true
+  '';
   integrationArgs = { inherit theme helpers; };
 in
 {
@@ -48,6 +52,16 @@ in
           fi
         fi
       '';
+
+      xdg.configFile = lib.mkIf cfg.autostart.hideRedundantApplets (lib.mkMerge [
+        (lib.mkIf cfg."hyprland".enable {
+          "autostart/org.fcitx.Fcitx5.desktop".text = hiddenAutostartEntry;
+        })
+        (lib.mkIf cfg."waybar".enable {
+          "autostart/blueman.desktop".text = hiddenAutostartEntry;
+          "autostart/nm-applet.desktop".text = hiddenAutostartEntry;
+        })
+      ]);
     })
 
     (lib.mkIf cfg."alacritty".enable (import ./apps/alacritty/default.nix integrationArgs))
