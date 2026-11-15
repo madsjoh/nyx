@@ -57,7 +57,7 @@ in
     (lib.mkIf cfg."ghostty".enable (import ./apps/ghostty/default.nix integrationArgs))
     (lib.mkIf cfg."gum".enable (import ./apps/gum/default.nix integrationArgs))
     (lib.mkIf cfg."helix".enable (import ./apps/helix/default.nix integrationArgs))
-    (lib.mkIf cfg."hyprland".enable (import ./apps/hyprland/default.nix integrationArgs))
+    (lib.mkIf cfg."hyprland".enable (import ./apps/hyprland/default.nix (integrationArgs // { inherit (cfg) keyboard; })))
     (lib.mkIf cfg."hyprlock".enable (import ./apps/hyprlock/default.nix integrationArgs))
     (lib.mkIf cfg."keyboard-rgb".enable (import ./apps/keyboard-rgb/default.nix integrationArgs))
     (lib.mkIf cfg."kitty".enable (import ./apps/kitty/default.nix integrationArgs))

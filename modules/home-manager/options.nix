@@ -19,6 +19,34 @@ in
   options.nyx = {
     enable = lib.mkEnableOption "Nyx theme module";
 
+    keyboard = {
+      layout = lib.mkOption {
+        type = lib.types.str;
+        default = "us";
+        description = "XKB keyboard layout";
+      };
+      model = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "XKB keyboard model";
+      };
+      options = lib.mkOption {
+        type = lib.types.str;
+        default = "compose:caps";
+        description = "XKB keyboard options";
+      };
+      rules = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "XKB keyboard rules";
+      };
+      variant = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "XKB keyboard variant";
+      };
+    };
+
     theme = lib.mkOption {
       type = lib.types.enum themeNames;
       default = "tokyo-night";
