@@ -163,6 +163,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         cmd.borrow_mut().toggle_panel = Some(PanelKind::Power);
     });
 
+    if let Some(hypr) = hyprland::Hyprland::connect() {
+        bar.on_focus_workspace(move |id| {
+            hypr.focus_workspace(id as i64);
+        });
+    }
+
     let cmd = Rc::clone(&commands);
     power.on_action(move |action| {
         cmd.borrow_mut().power_action = Some(action.to_string());
@@ -194,18 +200,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn spawn_workspaces() -> Option<std::sync::mpsc::Receiver<String>> {
+fn spawn_workspaces() -> Option<std::sync::mpsc::Receiver<(Vec<i64>, i64)>> {
     let hypr = hyprland::Hyprland::connect()?;
-    let (tx, rx) = std::sync::mpsc::channel::<String>();
+    let (tx, rx) = std::sync::mpsc::channel::<(Vec<i64>, i64)>();
     std::thread::spawn(move || {
-        let mut last = String::new();
         loop {
             if let Some((ids, active)) = hypr.workspaces() {
-                let text = hyprland::format_workspaces(&ids, active);
-                if text != last {
-                    let _ = tx.send(text.clone());
-                    last = text;
-                }
+                let _ = tx.send((ids, active));
             }
             std::thread::sleep(std::time::Duration::from_millis(1000));
         }

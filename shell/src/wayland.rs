@@ -13,7 +13,9 @@ use smithay_client_toolkit::output::{OutputHandler, OutputState};
 use smithay_client_toolkit::registry::{ProvidesRegistryState, RegistryState};
 use smithay_client_toolkit::registry_handlers;
 use smithay_client_toolkit::seat::keyboard::{KeyEvent, KeyboardHandler, Keysym};
-use smithay_client_toolkit::seat::pointer::{PointerEvent, PointerEventKind, PointerHandler};
+use smithay_client_toolkit::seat::pointer::{
+    BTN_LEFT, BTN_MIDDLE, BTN_RIGHT, PointerEvent, PointerEventKind, PointerHandler,
+};
 use smithay_client_toolkit::seat::{Capability, SeatHandler, SeatState};
 use smithay_client_toolkit::shell::wlr_layer::{
     Anchor, KeyboardInteractivity, Layer, LayerShell, LayerShellHandler, LayerSurface,
@@ -26,7 +28,8 @@ use wayland_client::protocol::{wl_keyboard, wl_output, wl_pointer, wl_seat, wl_s
 use wayland_client::{Connection, QueueHandle};
 
 use slint::platform::software_renderer::PremultipliedRgbaColor;
-use slint::{ModelRc, SharedString};
+use slint::platform::{PointerEventButton, WindowEvent};
+use slint::{LogicalPosition, ModelRc, SharedString};
 
 use crate::launcher::{self, Commands};
 use crate::panels::{self, PanelKind};
@@ -101,7 +104,7 @@ pub struct App {
     networks: Vec<(String, i32)>,
 
     commands: Rc<RefCell<Commands>>,
-    workspaces_rx: Option<std::sync::mpsc::Receiver<String>>,
+    workspaces_rx: Option<std::sync::mpsc::Receiver<(Vec<i64>, i64)>>,
     status_rx: Option<std::sync::mpsc::Receiver<crate::status::Status>>,
 
     keyboard: Option<wl_keyboard::WlKeyboard>,
@@ -311,7 +314,7 @@ impl App {
         self.commands.clone()
     }
 
-    pub fn set_workspaces_rx(&mut self, rx: Option<std::sync::mpsc::Receiver<String>>) {
+    pub fn set_workspaces_rx(&mut self, rx: Option<std::sync::mpsc::Receiver<(Vec<i64>, i64)>>) {
         self.workspaces_rx = rx;
     }
 
@@ -365,7 +368,7 @@ impl App {
                 self.update_launcher_results();
             }
             Overlay::Panel(PanelKind::Clock) => {
-                let (title, weekdays, days) = panels::calendar();
+                let (title, weekdays, days) = panels::clock::calendar();
                 if let Some(clock) = &self.clock {
                     clock.set_heading(SharedString::from(title.as_str()));
                     clock.set_weekdays(model_of_strings(&weekdays));
@@ -373,7 +376,7 @@ impl App {
                 }
             }
             Overlay::Panel(PanelKind::Weather) => {
-                let (location, current, forecast) = panels::weather();
+                let (location, current, forecast) = panels::weather::report();
                 if let Some(weather) = &self.weather {
                     weather.set_location(SharedString::from(location.as_str()));
                     weather.set_current(SharedString::from(current.as_str()));
@@ -381,7 +384,7 @@ impl App {
                 }
             }
             Overlay::Panel(PanelKind::Network) => {
-                self.networks = panels::networks();
+                self.networks = panels::network::list();
                 if let Some(network) = &self.network {
                     let names: Vec<String> = self
                         .networks
@@ -392,14 +395,14 @@ impl App {
                 }
             }
             Overlay::Panel(PanelKind::Audio) => {
-                let (volume, muted) = panels::audio_state();
+                let (volume, muted) = panels::audio::state();
                 if let Some(audio) = &self.audio {
                     audio.set_volume(volume);
                     audio.set_muted(muted);
                 }
             }
             Overlay::Panel(PanelKind::Power) => {
-                let battery = panels::battery_info();
+                let battery = panels::power::battery();
                 if let Some(power) = &self.power {
                     power.set_battery(SharedString::from(battery.as_str()));
                 }
@@ -488,9 +491,11 @@ impl App {
         }
 
         if let Some(rx) = &self.workspaces_rx {
-            while let Ok(text) = rx.try_recv() {
+            while let Ok((ids, active)) = rx.try_recv() {
                 if let Some(bar) = &self.bar {
-                    bar.set_workspaces(text.into());
+                    let model: Vec<i32> = ids.iter().map(|id| *id as i32).collect();
+                    bar.set_workspaces(ModelRc::from(model.as_slice()));
+                    bar.set_active_workspace(active as i32);
                 }
             }
         }
@@ -520,17 +525,17 @@ impl App {
             self.activate_launcher();
         }
         if let Some(action) = commands.power_action {
-            panels::run_power_action(&action);
+            panels::power::run_action(&action);
         }
         if let Some(volume) = commands.audio_volume {
-            panels::set_volume(volume);
+            panels::audio::set_volume(volume);
             if let Some(audio) = &self.audio {
                 audio.set_volume(volume);
             }
         }
         if commands.audio_toggle_mute {
-            panels::toggle_mute();
-            let (volume, muted) = panels::audio_state();
+            panels::audio::toggle_mute();
+            let (volume, muted) = panels::audio::state();
             if let Some(audio) = &self.audio {
                 audio.set_volume(volume);
                 audio.set_muted(muted);
@@ -538,7 +543,7 @@ impl App {
         }
         if let Some(index) = commands.network_connect {
             if let Some((ssid, _)) = self.networks.get(index) {
-                panels::connect_wifi(ssid);
+                panels::network::connect(ssid);
             }
         }
 
@@ -773,11 +778,51 @@ impl PointerHandler for App {
         _pointer: &wl_pointer::WlPointer,
         events: &[PointerEvent],
     ) {
+        let adapters: Vec<Rc<LayerWindowAdapter>> = self.shared.adapters.borrow().clone();
         for event in events {
-            if let PointerEventKind::Press { button, .. } = event.kind {
-                log::debug!("press {:x}", button);
-            }
+            let Some(surface_id) = self
+                .surfaces
+                .iter()
+                .position(|s| s.layer.wl_surface() == &event.surface)
+            else {
+                continue;
+            };
+            let Some(adapter) = adapters
+                .iter()
+                .find(|a| *a.surface_id.borrow() == Some(surface_id))
+            else {
+                continue;
+            };
+            let position = LogicalPosition::new(event.position.0 as f32, event.position.1 as f32);
+            let window_event = match event.kind {
+                PointerEventKind::Press { button, .. } => WindowEvent::PointerPressed {
+                    position,
+                    button: pointer_button(button),
+                },
+                PointerEventKind::Release { button, .. } => WindowEvent::PointerReleased {
+                    position,
+                    button: pointer_button(button),
+                },
+                PointerEventKind::Motion { .. } => WindowEvent::PointerMoved { position },
+                PointerEventKind::Enter { .. } => continue,
+                PointerEventKind::Leave { .. } => WindowEvent::PointerExited,
+                PointerEventKind::Axis { vertical, .. } => WindowEvent::PointerScrolled {
+                    position,
+                    delta_x: 0.0,
+                    delta_y: vertical.absolute as f32,
+                },
+            };
+            let _ = adapter.msw.dispatch_event(window_event);
         }
+    }
+}
+
+fn pointer_button(button: u32) -> PointerEventButton {
+    match button {
+        BTN_LEFT => PointerEventButton::Left,
+        BTN_RIGHT => PointerEventButton::Right,
+        BTN_MIDDLE => PointerEventButton::Middle,
+        _ => PointerEventButton::Other,
     }
 }
 

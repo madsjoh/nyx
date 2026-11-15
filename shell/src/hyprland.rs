@@ -45,17 +45,8 @@ impl Hyprland {
 
         Some((ids, active))
     }
-}
 
-pub fn format_workspaces(ids: &[i64], active: i64) -> String {
-    ids.iter()
-        .map(|id| {
-            if *id == active {
-                format!("[{id}]")
-            } else {
-                id.to_string()
-            }
-        })
-        .collect::<Vec<_>>()
-        .join(" ")
+    pub fn focus_workspace(&self, id: i64) {
+        let _ = self.request(&format!("dispatch workspace {id}"));
+    }
 }

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use std::process::Command;
 
 #[derive(Debug, Clone, Default)]
@@ -68,7 +70,7 @@ impl StatusPoller {
             return String::new();
         }
         let usage = 100.0 * (d_total - d_idle) as f64 / d_total as f64;
-        format!("{usage:.0}%")
+        format!("󰍛 {usage:.0}%")
     }
 
     fn battery(&self) -> String {
@@ -91,35 +93,42 @@ impl StatusPoller {
         let charging = std::fs::read_to_string(battery.join("status"))
             .map(|s| s.trim() == "Charging")
             .unwrap_or(false);
-        let icon = if charging { "\u{f584}" } else { "\u{f579}" };
+        let icon = if charging {
+            "󰂆"
+        } else if capacity >= 80 {
+            "󰂅"
+        } else if capacity >= 40 {
+            "󰂂"
+        } else {
+            "󰁹"
+        };
         format!("{icon} {capacity}%")
     }
 
     fn network(&self) -> String {
         if let Some(ssid) = run("nmcli", &["-t", "-f", "active,ssid", "dev", "wifi"])
             .and_then(|s| {
-                s.lines()
-                    .find_map(|l| {
-                        let mut parts = l.split(':');
-                        let active = parts.next()?;
-                        let ssid = parts.next().unwrap_or("");
-                        if active == "yes" && !ssid.is_empty() {
-                            Some(ssid.to_string())
-                        } else {
-                            None
-                        }
-                    })
+                s.lines().find_map(|l| {
+                    let mut parts = l.split(':');
+                    let active = parts.next()?;
+                    let ssid = parts.next().unwrap_or("");
+                    if active == "yes" && !ssid.is_empty() {
+                        Some(ssid.to_string())
+                    } else {
+                        None
+                    }
+                })
             })
         {
-            return format!("\u{faa8} {ssid}");
+            return format!("󰤨 {ssid}");
         }
         if run("nmcli", &["-t", "-f", "name,type", "connection", "show", "--active"])
             .map(|s| s.lines().any(|l| l.split(':').nth(1) == Some("ethernet") || l.split(':').nth(1) == Some("802-3-ethernet")))
             .unwrap_or(false)
         {
-            return "\u{f796}".to_string();
+            return "󰀂".to_string();
         }
-        "\u{f6a6}".to_string()
+        "󰤮".to_string()
     }
 
     fn bluetooth(&self) -> String {
@@ -127,24 +136,31 @@ impl StatusPoller {
             .map(|s| s.lines().filter(|l| !l.trim().is_empty()).count())
             .unwrap_or(0);
         if connected > 0 {
-            "\u{f294}".to_string()
+            "󰂱".to_string()
         } else {
-            "\u{f293}".to_string()
+            "󰂲".to_string()
         }
     }
 
     fn audio(&self) -> String {
-        let volume = run("wpctl", &["get-volume", "@DEFAULT_AUDIO_SINK@"])
-            .or_else(|| run("pamixer", &["--get-volume-human"]))
-            .unwrap_or_default();
         let muted = run("wpctl", &["get-mute", "@DEFAULT_AUDIO_SINK@"])
             .map(|s| s == "Muted")
             .unwrap_or(false);
-        if muted || volume == "0%" {
-            format!("\u{f6a9} {}", if muted { "muted" } else { &volume })
+        let volume = run("wpctl", &["get-volume", "@DEFAULT_AUDIO_SINK@"])
+            .and_then(|s| s.split_whitespace().last().and_then(|v| v.parse::<f32>().ok()))
+            .map(|v| (v * 100.0).round() as i32)
+            .unwrap_or(0);
+
+        let icon = if muted {
+            ""
+        } else if volume >= 66 {
+            ""
+        } else if volume >= 33 {
+            ""
         } else {
-            format!("\u{f6a8} {volume}")
-        }
+            ""
+        };
+        format!("{icon} {volume}%")
     }
 
     fn weather(&self) -> String {

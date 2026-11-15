@@ -106,7 +106,7 @@ impl Default for BarConfig {
             spacing: 8,
             text_size: 12,
             font_family: "JetBrainsMono Nerd Font".into(),
-            logo: "\u{ef86}".into(),
+            logo: "\u{f313}".into(),
         }
     }
 }

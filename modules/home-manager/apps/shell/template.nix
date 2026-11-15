@@ -7,7 +7,7 @@ builtins.toJSON {
     spacing = options.spacing;
     text-size = options.textSize;
     font-family = options.fontFamily;
-    logo = "";
+    logo = "";
   };
   launcher = {
     width = 640;

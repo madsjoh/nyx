@@ -30,7 +30,8 @@ export component BarWindow inherits Window {
     in property <length> text-size: 12px;
     in property <string> font-family: "sans-serif";
     in property <string> logo: "";
-    in property <string> workspaces: "1 2 3 4 5";
+    in property <[int]> workspaces: [];
+    in property <int> active-workspace: 0;
     in property <string> clock: "--:--";
     in property <string> status-weather: "";
     in property <string> status-audio: "";
@@ -65,11 +66,24 @@ export component BarWindow inherits Window {
             }
         }
 
-        Text {
-            text: root.workspaces;
-            color: NyxTheme.foreground;
-            font-family: root.font-family;
-            font-size: root.text-size;
+        for ws[i] in root.workspaces : Rectangle {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background: ws == root.active-workspace ? NyxTheme.foreground : transparent;
+
+            Text {
+                text: ws;
+                color: ws == root.active-workspace ? NyxTheme.background : NyxTheme.foreground;
+                font-family: root.font-family;
+                font-size: root.text-size;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+
+            TouchArea {
+                clicked => { root.focus-workspace(ws); }
+            }
         }
 
         Rectangle {
@@ -89,6 +103,11 @@ export component BarWindow inherits Window {
             font-family: root.font-family;
             text-size: root.text-size;
             clicked => { root.open-clock(); }
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            background: transparent;
         }
 
         StatusText {
@@ -128,6 +147,7 @@ export component BarWindow inherits Window {
     }
 
     callback launch();
+    callback focus-workspace(int);
     callback open-weather();
     callback open-clock();
     callback open-audio();
